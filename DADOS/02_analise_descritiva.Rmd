@@ -1,0 +1,238 @@
+---
+title: "02_analise_descritiva.Rmd"
+output: html_document
+date: "2025-11-11"
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(data.table)
+```
+
+```{r carregar-dados, echo=FALSE}
+caminho_dados_finais <- "enem_2024_GOIAS_filtrado_final.csv"
+
+dados_enem <- fread(caminho_dados_finais)
+
+#head(dados_enem)
+#summary(dados_enem)
+```
+---
+
+### Análise: Tipo de Escola (`TP_DEPENDENCIA_ADM_ESC`)
+
+```{r analise-qualitativa-escola, echo=FALSE}
+# 1. Tabela de Frequência Absoluta
+tabela_escola <- table(dados_enem$TP_DEPENDENCIA_ADM_ESC)
+
+# 2. Tabela de Porcentagem
+tabela_escola_porc <- round(100 * prop.table(tabela_escola), 2)
+
+# 3. ATRIBUIR OS NOMES CORRETOS DIRETAMENTE NA VARIÁVEL
+# (1=Federal, 2=Estadual, 3=Municipal, 4=Privada)
+names(tabela_escola_porc) <- c("Federal", "Estadual", "Municipal", "Privada")
+
+# 4. Gráfico de Barras (com rótulos corretos)
+barplot(tabela_escola_porc,
+        main="Gráfico 1: Tipo de Escola dos Participantes (GO)",
+        ylab="Porcentagem (%)",
+        xlab="Tipo de Dependência Administrativa",
+        col="darkblue"
+)
+```
+
+**Interpretação da Análise de Tipo de Escola**
+
+A análise da `TP_DEPENDENCIA_ADM_ESC` (Gráfico 1) mostra o perfil claro dos participantes de escolas de Goiás. A grande maioria, **`r tabela_escola_porc["Estadual"]`%**, provém de escolas **Estaduais**.
+
+Em segundo lugar, com **`r tabela_escola_porc["Privada"]`%**, estão os alunos de escolas **Privadas**, seguidos por **`r tabela_escola_porc["Federal"]`%** de escolas **Federais**.
+
+Como esperado para participantes do Ensino Médio, a participação de escolas **Municipais** é estatisticamente nula, com apenas **`r tabela_escola_porc["Municipal"]`%**.
+
+---
+
+## Análise das Variáveis Quantitativas Discretas
+
+Agora, analisamos as variáveis contáveis. Usamos o número de acertos em Ciências da Natureza (`ACERTOS_CN`) como nosso exemplo.
+
+### Análise: Acertos em Ciências da Natureza (`ACERTOS_CN`)
+
+```{r analise-discreta-acertos, echo=FALSE}
+# 1. Calcular as medidas e salvar em variáveis
+# (Usamos na.rm=TRUE para ignorar valores ausentes/NA)
+media_acertos_cn <- round(mean(dados_enem$ACERTOS_CN, na.rm = TRUE), 2)
+mediana_acertos_cn <- median(dados_enem$ACERTOS_CN, na.rm = TRUE)
+q1_acertos_cn <- quantile(dados_enem$ACERTOS_CN, 0.25, na.rm = TRUE)
+q3_acertos_cn <- quantile(dados_enem$ACERTOS_CN, 0.75, na.rm = TRUE)
+
+# 2. Gerar o Histograma
+hist(dados_enem$ACERTOS_CN,
+     main="Gráfico 2: Distribuição de Acertos em CN (GO)",
+     xlab="Número de Acertos",
+     ylab="Frequência (Nº de Alunos)",
+     col="darkgreen",
+     breaks = 20) 
+```
+
+**Interpretação da Análise de Acertos em CN**
+
+A análise do `ACERTOS_CN` nos dá uma visão clara do desempenho. A média de acertos foi de **`r media_acertos_cn`**, enquanto a mediana (o valor central, 50%) foi de **`r mediana_acertos_cn`** acertos.
+
+O `summary` também indica que 50% dos alunos (o intervalo interquartil) acertaram entre **`r q1_acertos_cn`** (1º Quartil) e **`r q3_acertos_cn`** (3º Quartil) questões.
+
+O Histograma (Gráfico 2) ilustra visualmente essa distribuição. É possível observar uma clara **assimetria à direita** (ou assimetria positiva), o que significa que a maioria dos alunos se concentra nas faixas de acertos mais baixas. A frequência de alunos diminui consideravelmente após os 30 acertos, mostrando que poucos participantes alcançaram as pontuações mais altas na prova.
+
+---
+
+## Análise das Variáveis Quantitativas Contínuas
+
+Aqui analisamos as notas, que são a principal medida de desempenho. Usamos a `NU_NOTA_MT` (Nota de Matemática) como exemplo.
+
+### Análise: Nota de Matemática (`NU_NOTA_MT`)
+
+```{r analise-continua-nota, echo=FALSE}
+# 1. Calcular as medidas e salvar em variáveis
+summary_stats_mt <- summary(dados_enem$NU_NOTA_MT, na.rm = TRUE)
+media_mt <- round(mean(dados_enem$NU_NOTA_MT, na.rm = TRUE), 2)
+mediana_mt <- median(dados_enem$NU_NOTA_MT, na.rm = TRUE)
+q1_mt <- quantile(dados_enem$NU_NOTA_MT, 0.25, na.rm = TRUE)
+q3_mt <- quantile(dados_enem$NU_NOTA_MT, 0.75, na.rm = TRUE)
+sd_mt <- round(sd(dados_enem$NU_NOTA_MT, na.rm = TRUE), 2)
+
+# 2. Gráfico: Histograma
+hist(dados_enem$NU_NOTA_MT,
+     main="Gráfico 3: Distribuição das Notas de Matemática (GO)",
+     xlab="Nota de Matemática",
+     ylab="Frequência",
+     col="darkred",
+     breaks = 20)
+
+# 3. Gráfico: Boxplot
+boxplot(dados_enem$NU_NOTA_MT,
+        main="Gráfico 4: Boxplot das Notas de Matemática (GO)",
+        ylab="Nota")
+```
+
+**Interpretação da Análise de Nota de Matemática (Histograma)**
+
+O Histograma (Gráfico 3) ilustra a distribuição das notas de Matemática (`NU_NOTA_MT`). A média geral das notas foi de **`r media_mt`** pontos, um valor muito próximo da mediana, que foi de **`r mediana_mt`** pontos, sugerindo uma distribuição razoavelmente simétrica. Visualmente, o gráfico mostra que a grande maioria dos alunos se concentra na faixa central de desempenho, com o pico da distribuição (a faixa modal) ocorrendo aproximadamente entre 550 e 600 pontos.
+
+**Interpretação da Análise de Nota de Matemática (Boxplot)**
+
+O Boxplot (Gráfico 4) complementa a análise do histograma, fornecendo um resumo claro da dispersão das notas. A linha preta grossa dentro da caixa representa a mediana, **`r mediana_mt`**. A "caixa" em si (o intervalo interquartil) mostra que 50% dos alunos "típicos" se encontram com notas entre **`r q1_mt`** (1º Quartil) e **`r q3_mt`** (3º Quartil).
+
+---
+
+## Análise Comparativa (Cruzamento de Variáveis)
+
+Esta é a parte mais importante da análise descritiva, onde cruzamos variáveis qualitativas e quantitativas.
+
+### Análise: Nota de Matemática vs. Tipo de Escola
+
+```{r analise-comparativa-boxplot, echo=FALSE}
+# 1. Criamos os vetores de nomes e cores
+rotulos_escola <- c("Federal", "Estadual", "Municipal", "Privada")
+cores_escola <- c("blue", "green", "orange", "red")
+
+# 2. Geramos o Boxplot
+boxplot(dados_enem$NU_NOTA_MT ~ dados_enem$TP_DEPENDENCIA_ADM_ESC,
+        main="Gráfico 5: Notas de Mat. por Tipo de Escola",
+        ylab="Nota de Matemática",
+        xlab="Tipo de Escola",
+        names = rotulos_escola,  
+        col = cores_escola       
+)
+
+# 3. CALCULAMOS AS ESTATÍSTICAS PARA O TEXTO
+# (Usamos 'tapply' para calcular a mediana por grupo)
+medianas_por_grupo <- tapply(dados_enem$NU_NOTA_MT,
+                                 dados_enem$TP_DEPENDENCIA_ADM_ESC,
+                                 median,
+                                 na.rm = TRUE)
+
+# 4. Salvar em variáveis fáceis de usar no texto
+med_federal <- round(medianas_por_grupo["1"], 2)
+med_estadual <- round(medianas_por_grupo["2"], 2)
+med_municipal <- round(medianas_por_grupo["3"], 2)
+med_privada <- round(medianas_por_grupo["4"], 2)
+```
+
+**Interpretação da Análise Comparativa (Gráfico 5)**
+
+O Gráfico 5 é uma das análises mais reveladoras deste trabalho, pois compara o desempenho em Matemática (`NU_NOTA_MT`) entre os diferentes tipos de administração escolar (`TP_DEPENDENCIA_ADM_ESC`).
+
+A diferença de desempenho é nítida:
+
+1.  **Escolas Federais:** Apresentam o melhor desempenho. A mediana (a linha grossa) deste grupo é de **`r med_federal`** pontos, a mais alta entre todas as categorias.
+2.  **Escolas Privadas:** Ficam em segundo lugar, com uma mediana de **`r med_privada`** pontos, um valor visivelmente superior ao das escolas Estaduais.
+3.  **Escolas Estaduais:** Este grupo, que representa a grande maioria dos participantes (**`r tabela_escola_porc["Estadual"]`%**), apresenta uma mediana de **`r med_estadual`** pontos.
+4.  **Escolas Municipais:** Este grupo, estatisticamente pequeno (**`r tabela_escola_porc["Municipal"]`%**), apresenta o menor desempenho, com uma mediana de **`r med_municipal`** pontos.
+
+Em suma, o gráfico demonstra uma forte correlação entre a dependência administrativa da escola e o desempenho dos alunos na prova de matemática em Goiás.
+
+
+---
+
+## Análise de Regressão Linear Simples
+
+O foco da análise de regressão linear simples serve para verificar se uma variável quantitativa pode prever o comportamento de outra.
+
+Para esta análise, vamos investigar se a nota em **Ciências da Natureza (`NU_NOTA_CN`)** pode ser usada para prever a nota em **Matemática (`NU_NOTA_MT`)**.
+
+* Variável Dependente (Y): `NU_NOTA_MT`
+* Variável Independente (X): `NU_NOTA_CN`
+
+### Análise: `NU_NOTA_MT` vs. `NU_NOTA_CN`
+
+```{r analise-regressao, echo=FALSE}
+# 1. Ajustar o modelo de regressão linear
+# Usamos a fórmula lm(Y ~ X, data = dados_enem)
+modelo_regressao <- lm(NU_NOTA_MT ~ NU_NOTA_CN, data = dados_enem)
+
+# 2. Obter o resumo estatístico do modelo
+summary_modelo <- summary(modelo_regressao)
+
+# 3. Salvar as estatísticas importantes em variáveis
+# Coeficientes
+coeficientes <- summary_modelo$coefficients
+intercepto_b0 <- round(coeficientes[1, 1], 4) # Valor de B0
+slope_b1 <- round(coeficientes[2, 1], 4)      # Valor de B1
+p_valor <- coeficientes[2, 4]                 # P-valor do B1
+
+# R-quadrado (Quanto o modelo explica)
+r_quadrado <- round(summary_modelo$r.squared, 4)
+
+# 4. Gerar o Gráfico de Dispersão
+plot(dados_enem$NU_NOTA_CN, dados_enem$NU_NOTA_MT,
+     main="Gráfico 6: Regressão Linear - Nota Mat. vs. Nota CN",
+     xlab="Nota Ciências da Natureza (X)",
+     ylab="Nota Matemática (Y)",
+     pch = 19, # Tipo de ponto (círculo pequeno)
+     cex = 0.5, # Tamanho do ponto
+     col = "blue"
+)
+
+# 5. Adicionar a linha de regressão ao gráfico
+abline(modelo_regressao, col = "red", lwd = 3) # lwd = espessura da linha
+```
+
+**Interpretação da Análise de Regressão (Gráfico 6)**
+
+O Gráfico 6 mostra o diagrama de dispersão entre as notas de Ciências da Natureza (eixo X) e Matemática (eixo Y). A linha vermelha representa o modelo de regressão linear simples.
+
+Visualmente, os pontos formam uma nuvem que sobe da esquerda para a direita, indicando uma **correlação linear positiva** entre as duas variáveis: quanto maior a nota em CN, maior tende a ser a nota em MT.
+
+**Interpretação do Modelo Estatístico**
+
+O resumo do modelo estatístico nos fornece os seguintes indicadores-chave:
+
+1.  **Coeficientes (A Equação da Reta):**
+    * **Intercepto (B0):** `r intercepto_b0`. Este é o valor teórico da nota de Matemática se a nota de CN fosse zero.
+    * **Slope (B1 - `NU_NOTA_CN`):** `r slope_b1`. Este é o coeficiente mais importante. Ele indica que, em média, para cada **1 ponto** de aumento na nota de Ciências da Natureza, espera-se um aumento de **`r slope_b1`** pontos na nota de Matemática.
+
+2.  **Coeficiente de Determinação (R²):**
+    * O R-quadrado do modelo foi de **`r r_quadrado`**. Isso significa que **`r r_quadrado * 100`%** da variação nas notas de Matemática podem ser estatisticamente explicadas pela variação nas notas de Ciências da Natureza.
+
+3.  **Significância (P-Valor):**
+    * O P-valor para o coeficiente B1 foi de **`r p_valor`** (ou um valor muito próximo de zero). Como este valor é muito menor que 0.05, confirmamos que a relação entre as duas notas é **estatisticamente significante**.
