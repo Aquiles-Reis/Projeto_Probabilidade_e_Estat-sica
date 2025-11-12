@@ -11,7 +11,7 @@ library(data.table)
 ```
 
 ```{r carregar-dados, echo=FALSE}
-caminho_dados_finais <- "enem_2024_GOIAS_filtrado_final.csv"
+caminho_dados_finais <- "C:\\Users\\Filipe\\Documents\\enem_2024_GOIAS_filtrado_final.csv"
 
 dados_enem <- fread(caminho_dados_finais)
 
@@ -20,6 +20,126 @@ dados_enem <- fread(caminho_dados_finais)
 ```
 ---
 
+## Tabelas de Frequências dos Acertos
+Acertos Ciências da Natureza
+```{r tabela-frequencias-1, echo=FALSE}
+acertos_cn <- na.omit(dados_enem$ACERTOS_CN)
+
+intervalos <- cut(
+  acertos_cn,
+  breaks = seq(0, max(acertos_cn) + 5.001, by = 5),  # de 0 até o máximo, de 5 em 5
+  right = FALSE,  # [5,10) → intervalo fechado à esquerda
+  include.lowest = TRUE
+)
+
+freq_abs <- table(intervalos) # frequência absoluta
+freq_rel <- round(prop.table(freq_abs) * 100, 2) # frequência relativa (%)
+freq_acum <- cumsum(freq_rel) # frequência acumulada (%)
+
+tabela_freq_acertos <- data.frame(
+"Intervalo de Acertos" = names(freq_abs),
+"Frequência Absoluta" = as.vector(freq_abs),
+"Frequência Relativa (%)" = as.vector(freq_rel),
+"Frequência Acumulada (%)" = as.vector(freq_acum)
+)
+
+
+knitr::kable(
+tabela_freq_acertos,
+caption = "Tabela 1: Distribuição de Frequência - Acertos em Ciências da Natureza (GO)",
+align = "c"
+)
+```
+
+Acertos Ciências Humanas
+```{r tabela-frequencias-2, echo=FALSE}
+acertos_ch <- na.omit(dados_enem$ACERTOS_CH)
+
+intervalos <- cut(
+  acertos_ch,
+  breaks = seq(0, max(acertos_ch), by = 5)  ,  # de 0 até o máximo, de 5 em 5
+  right = FALSE,  # [5,10) → intervalo fechado à esquerda
+  include.lowest = TRUE
+)
+
+freq_abs <- table(intervalos) # frequência absoluta
+freq_rel <- round(prop.table(freq_abs) * 100, 2) # frequência relativa (%)
+freq_acum <- cumsum(freq_rel) # frequência acumulada (%)
+
+tabela_freq_acertos <- data.frame(
+"Intervalo de Acertos" = names(freq_abs),
+"Frequência Absoluta" = as.vector(freq_abs),
+"Frequência Relativa (%)" = as.vector(freq_rel),
+"Frequência Acumulada (%)" = as.vector(freq_acum)
+)
+
+
+knitr::kable(
+tabela_freq_acertos,
+caption = "Tabela 1: Distribuição de Frequência - Acertos em Ciências Humanas (GO)",
+align = "c"
+)
+```
+
+Acertos Matemática
+```{r tabela-frequencias-3, echo=FALSE}
+acertos_mt <- na.omit(dados_enem$ACERTOS_MT)
+
+intervalos <- cut(
+  acertos_mt,
+  breaks = seq(0, max(acertos_mt), by = 5),  # de 0 até o máximo, de 5 em 5
+  right = FALSE,  # [5,10) → intervalo fechado à esquerda
+  include.lowest = TRUE
+)
+
+freq_abs <- table(intervalos) # frequência absoluta
+freq_rel <- round(prop.table(freq_abs) * 100, 2) # frequência relativa (%)
+freq_acum <- cumsum(freq_rel) # frequência acumulada (%)
+
+tabela_freq_acertos <- data.frame(
+"Intervalo de Acertos" = names(freq_abs),
+"Frequência Absoluta" = as.vector(freq_abs),
+"Frequência Relativa (%)" = as.vector(freq_rel),
+"Frequência Acumulada (%)" = as.vector(freq_acum)
+)
+
+
+knitr::kable(
+tabela_freq_acertos,
+caption = "Tabela 1: Distribuição de Frequência - Acertos em Matemática (GO)",
+align = "c"
+)
+```
+Acertos Linguagens
+```{r tabela-frequencias-4, echo=FALSE}
+acertos_lc <- na.omit(dados_enem$ACERTOS_LC)
+
+intervalos <- cut(
+  acertos_lc,
+  breaks = seq(0, max(acertos_lc), by = 5),  # de 0 até o máximo, de 5 em 5
+  right = FALSE,  # [5,10) → intervalo fechado à esquerda
+  include.lowest = TRUE
+)
+
+freq_abs <- table(intervalos) # frequência absoluta
+freq_rel <- round(prop.table(freq_abs) * 100, 2) # frequência relativa (%)
+freq_acum <- cumsum(freq_rel) # frequência acumulada (%)
+
+tabela_freq_acertos <- data.frame(
+"Intervalo de Acertos" = names(freq_abs),
+"Frequência Absoluta" = as.vector(freq_abs),
+"Frequência Relativa (%)" = as.vector(freq_rel),
+"Frequência Acumulada (%)" = as.vector(freq_acum)
+)
+
+
+knitr::kable(
+tabela_freq_acertos,
+caption = "Tabela 1: Distribuição de Frequência - Acertos em Linguagens (GO)",
+align = "c"
+)
+
+```
 ### Análise: Tipo de Escola (`TP_DEPENDENCIA_ADM_ESC`)
 
 ```{r analise-qualitativa-escola, echo=FALSE}
