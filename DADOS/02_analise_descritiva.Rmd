@@ -11,7 +11,7 @@ library(data.table)
 ```
 
 ```{r carregar-dados, echo=FALSE}
-caminho_dados_finais <- "C:\\Users\\Filipe\\Documents\\enem_2024_GOIAS_filtrado_final.csv"
+caminho_dados_finais <- "C:/Users/ferna/OneDrive/Área de Trabalho/UFG/Projeto Prob e Estatistica/Projeto_Probabilidade_e_Estat-sica/DADOS/enem_2024_GOIAS_filtrado_final.csv"
 
 dados_enem <- fread(caminho_dados_finais)
 
@@ -241,6 +241,125 @@ O Histograma (Gráfico 3) ilustra a distribuição das notas de Matemática (`NU
 **Interpretação da Análise de Nota de Matemática (Boxplot)**
 
 O Boxplot (Gráfico 4) complementa a análise do histograma, fornecendo um resumo claro da dispersão das notas. A linha preta grossa dentro da caixa representa a mediana, **`r mediana_mt`**. A "caixa" em si (o intervalo interquartil) mostra que 50% dos alunos "típicos" se encontram com notas entre **`r q1_mt`** (1º Quartil) e **`r q3_mt`** (3º Quartil).
+
+### Análise: Nota da Redação (`NU_NOTA_REDACAO`)
+
+```{r analise-continua-nota-redacao, echo=FALSE}
+# 1. Calcular estatísticas descritivas da nota de redação
+summary_stats_red <- summary(dados_enem$NU_NOTA_REDACAO, na.rm = TRUE)
+media_red <- round(mean(dados_enem$NU_NOTA_REDACAO, na.rm = TRUE), 2)
+mediana_red <- median(dados_enem$NU_NOTA_REDACAO, na.rm = TRUE)
+q1_red <- quantile(dados_enem$NU_NOTA_REDACAO, 0.25, na.rm = TRUE)
+q3_red <- quantile(dados_enem$NU_NOTA_REDACAO, 0.75, na.rm = TRUE)
+sd_red <- round(sd(dados_enem$NU_NOTA_REDACAO, na.rm = TRUE), 2)
+
+# 2. Gráfico: Histograma
+hist(dados_enem$NU_NOTA_REDACAO,
+     main="Gráfico X: Distribuição das Notas de Redação (GO)",
+     xlab="Nota de Redação",
+     ylab="Frequência",
+     col="purple",
+     breaks=20)
+
+# 3. Gráfico: Boxplot
+boxplot(dados_enem$NU_NOTA_REDACAO,
+        main="Gráfico Y: Boxplot das Notas de Redação (GO)",
+        ylab="Nota de Redação")
+```
+
+### Análise das Notas
+#### Histogramas
+```{r analise-continua-notas-histograma, echo=FALSE}
+# Layout compacto com par(mfrow): Histogramas de todas as áreas do ENEM
+
+# Define layout: 2 linhas, 3 colunas
+par(mfrow = c(2, 3))
+
+# Histograma - Ciências da Natureza
+hist(dados_enem$NU_NOTA_CN,
+     main = "Ciências da Natureza",
+     xlab = "Nota",
+     ylab = "Frequência",
+     col = "darkgreen",
+     breaks = 20)
+
+# Histograma - Ciências Humanas
+hist(dados_enem$NU_NOTA_CH,
+     main = "Ciências Humanas",
+     xlab = "Nota",
+     ylab = "Frequência",
+     col = "darkblue",
+     breaks = 20)
+
+# Histograma - Linguagens
+hist(dados_enem$NU_NOTA_LC,
+     main = "Linguagens",
+     xlab = "Nota",
+     ylab = "Frequência",
+     col = "darkorange",
+     breaks = 20)
+
+# Histograma - Redação
+hist(dados_enem$NU_NOTA_REDACAO,
+     main = "Redação",
+     xlab = "Nota",
+     ylab = "Frequência",
+     col = "purple",
+     breaks = 20)
+
+# Histograma - Matemática
+hist(dados_enem$NU_NOTA_MT,
+     main = "Matemática",
+     xlab = "Nota",
+     ylab = "Frequência",
+     col = "darkred",
+     breaks = 20)
+
+# Voltar ao layout padrão
+par(mfrow = c(1, 1))
+```
+
+#### Boxplots
+```{r analise-continua-notas-boxplot, echo=FALSE}
+# Layout compacto com par(mfrow): Boxplots de todas as áreas do ENEM
+
+# Define layout: 2 linhas, 3 colunas
+par(mfrow = c(2, 3))
+
+# Boxplot - Ciências da Natureza
+boxplot(dados_enem$NU_NOTA_CN,
+        main = "Ciências da Natureza",
+        ylab = "Nota",
+        col = "darkgreen")
+
+# Boxplot - Ciências Humanas
+boxplot(dados_enem$NU_NOTA_CH,
+        main = "Ciências Humanas",
+        ylab = "Nota",
+        col = "darkblue")
+
+# Boxplot - Linguagens
+boxplot(dados_enem$NU_NOTA_LC,
+        main = "Linguagens",
+        ylab = "Nota",
+        col = "darkorange")
+
+# Boxplot - Redação
+boxplot(dados_enem$NU_NOTA_REDACAO,
+        main = "Redação",
+        ylab = "Nota",
+        col = "purple")
+
+# Boxplot - Matemática
+boxplot(dados_enem$NU_NOTA_MT,
+        main = "Matemática",
+        ylab = "Nota",
+        col = "darkred")
+
+# Voltar ao layout padrão
+par(mfrow = c(1, 1))
+
+```
 
 ---
 
