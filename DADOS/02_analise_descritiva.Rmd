@@ -7,6 +7,11 @@ date: "2025-11-11"
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(data.table)
+library(dplyr)      # O dono do pipe %>%
+library(ggplot2)    # Gráficos
+library(scales)     # Formatação de números
+library(tibble)     # Tabelas melhores
+library(knitr)      # Para o kable
 knitr::opts_chunk$set(
   echo = FALSE,
   message = FALSE,
@@ -28,7 +33,8 @@ dados_enem <- fread(caminho_dados_finais)
 
 ## Tabelas de Frequências dos Acertos
 
-Acertos Ciências da Natureza
+
+### Acertos Ciências da Natureza
 ```{r tabela-frequencias-1, echo=FALSE}
 acertos_cn <- na.omit(dados_enem$ACERTOS_CN)
 intervalos_cn <- cut(
@@ -52,7 +58,8 @@ knitr::kable(
 )
 ```
 
-Acertos Ciências Humanas
+
+### Acertos Ciências Humanas
 ```{r tabela-frequencias-2, echo=FALSE}
 acertos_ch <- na.omit(dados_enem$ACERTOS_CH)
 intervalos_ch <- cut(
@@ -76,7 +83,8 @@ knitr::kable(
 )
 ```
 
-Acertos Matemática
+
+### Acertos Matemática
 ```{r tabela-frequencias-3, echo=FALSE}
 acertos_mt <- na.omit(dados_enem$ACERTOS_MT)
 intervalos_mt <- cut(
@@ -100,7 +108,8 @@ knitr::kable(
 )
 ```
 
-Acertos Linguagens
+
+### Acertos Linguagens
 ```{r tabela-frequencias-4, echo=FALSE}
 acertos_lc <- na.omit(dados_enem$ACERTOS_LC)
 intervalos_lc <- cut(
@@ -126,9 +135,8 @@ knitr::kable(
 
 ---
 
+## Estatísticas descritivas das notas ENEM
 ```{r medidas-descritivas-notas, echo=FALSE}
-# --- Estatísticas descritivas das notas ENEM ---
-
 # Pacotes úteis
 library(dplyr)
 library(tibble)
@@ -174,10 +182,11 @@ tabela_medidas <- tibble::rownames_to_column(as.data.frame(tabela_medidas), "Med
 # Mostra a tabela
 knitr::kable(tabela_medidas, caption = "Medidas descritivas das notas do ENEM 2024", digits = 2)
 ```
----
-```{r medidas-descritivas-acertos, echo=FALSE}
-# --- Estatísticas descritivas das notas ENEM ---
 
+---
+
+## Estatísticas descritivas dos acertos ENEM
+```{r medidas-descritivas-acertos, echo=FALSE}
 # Pacotes úteis
 library(dplyr)
 library(tibble)
@@ -225,6 +234,8 @@ knitr::kable(tabela_medidas, caption = "Medidas descritivas dos acertos do ENEM 
 
 ---
 
+## Análise das Variáveis Qualitativas
+
 ### Análise: Tipo de Escola (`TP_DEPENDENCIA_ADM_ESC`)
 
 ```{r analise-qualitativa-escola, echo=FALSE}
@@ -254,6 +265,75 @@ A análise da `TP_DEPENDENCIA_ADM_ESC` (Gráfico 1) mostra o perfil claro dos pa
 Em segundo lugar, com **`r tabela_escola_porc["Privada"]`%**, estão os alunos de escolas **Privadas**, seguidos por **`r tabela_escola_porc["Federal"]`%** de escolas **Federais**.
 
 Como esperado para participantes do Ensino Médio, a participação de escolas **Municipais** é estatisticamente nula, com apenas **`r tabela_escola_porc["Municipal"]`%**.
+
+---
+
+## Análise: Tipo da Língua Estrangeira (`TP_LINGUA`)
+
+```{r analise-lingua, echo=FALSE, message=FALSE, warning=FALSE}
+library(dplyr)
+library(ggplot2)
+library(scales)
+
+# 1. Preparação dos Dados
+analise_lingua <- dados_enem %>%
+  count(TP_LINGUA) %>%
+  mutate(
+    # Cria uma coluna com o NOME da língua para ficar bonito no gráfico
+    Lingua = case_when(
+      TP_LINGUA == 0 ~ "Inglês",
+      TP_LINGUA == 1 ~ "Espanhol"
+    ),
+    Porcentagem = n / sum(n) * 100
+  )
+
+# 2. Gráfico de Barras
+ggplot(analise_lingua, aes(x = Lingua, y = n)) +
+  geom_bar(stat = "identity", fill = "steelblue", color = "black", width = 0.6) +
+  geom_text(aes(label = paste0(n, " (", round(Porcentagem, 1), "%)")), 
+            vjust = -0.5, fontface = "bold") +
+  scale_y_continuous(labels = scales::comma, expand = expansion(mult = c(0, 0.15))) +
+  labs(
+    title = "Distribuição da Escolha de Língua Estrangeira",
+    subtitle = "Total de alunos presentes por idioma escolhido",
+    x = "Idioma Escolhido",
+    y = "Quantidade de Alunos"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 14, face = "bold"),
+    axis.text = element_text(size = 11),
+    panel.grid.major.x = element_blank()
+  )
+
+# 1. Identificar a língua mais escolhida (Top 1)
+top_lingua <- analise_lingua %>% 
+  filter(n == max(n))
+
+# 2. Identificar a língua menos escolhida
+bottom_lingua <- analise_lingua %>% 
+  filter(n == min(n))
+
+# 3. Formatar os números para texto (Ex: 24.820 e 56,7%)
+# O format() coloca o ponto de milhar
+# O sub() troca ponto decimal por vírgula se necessário
+
+nome_maioria <- top_lingua$Lingua
+qtd_maioria  <- format(top_lingua$n, big.mark = ".", decimal.mark = ",")
+perc_maioria <- gsub("\\.", ",", round(top_lingua$Porcentagem, 1))
+
+nome_minoria <- bottom_lingua$Lingua
+qtd_minoria  <- format(bottom_lingua$n, big.mark = ".", decimal.mark = ",")
+perc_minoria <- gsub("\\.", ",", round(bottom_lingua$Porcentagem, 1))
+```
+
+**Interpretação da Análise de Língua Estrangeira**
+
+A distribuição da escolha de Língua Estrangeira apresenta um cenário competitivo, porém com uma liderança definida da língua **`r nome_maioria`**.
+
+Observa-se que a maioria dos estudantes (**`r perc_maioria`%**, ou **`r qtd_maioria`** alunos) optou pelo **`r nome_maioria`** como idioma de prova, enquanto o **`r nome_minoria`** foi a escolha de **`r perc_minoria`%** (**`r qtd_minoria`** alunos).
+
+Este dado é particularmente interessante quando cruzado com a análise anterior: mesmo com a grande predominância de alunos da rede estadual pública, a preferência pelo **`r nome_maioria`** se mostra superior neste grupo de concluintes.
 
 ---
 
@@ -465,7 +545,7 @@ med_municipal <- round(medianas_por_grupo["3"], 2)
 med_privada <- round(medianas_por_grupo["4"], 2)
 ```
 
-**Interpretação da Análise Comparativa (Gráfico 5)**
+**Interpretação da Análise Comparativa**
 
 O Gráfico 5 é uma das análises mais reveladoras deste trabalho, pois compara o desempenho em Matemática (`NU_NOTA_MT`) entre os diferentes tipos de administração escolar (`TP_DEPENDENCIA_ADM_ESC`).
 
@@ -523,7 +603,7 @@ plot(dados_enem$NU_NOTA_CN, dados_enem$NU_NOTA_MT,
 abline(modelo_regressao, col = "red", lwd = 3) # lwd = espessura da linha
 ```
 
-**Interpretação da Análise de Regressão (Gráfico 6)**
+**Interpretação da Análise de Regressão**
 
 O Gráfico 6 mostra o diagrama de dispersão entre as notas de Ciências da Natureza (eixo X) e Matemática (eixo Y). A linha vermelha representa o modelo de regressão linear simples.
 
