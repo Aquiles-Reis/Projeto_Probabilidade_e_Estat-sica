@@ -8,6 +8,13 @@ date: "2025-11-11"
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(data.table)
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE,
+  fig.align = "center",
+  out.width = "80%"
+)
 ```
 
 ```{r carregar-dados, echo=FALSE}
@@ -138,8 +145,130 @@ tabela_freq_acertos,
 caption = "Tabela 1: Distribuição de Frequência - Acertos em Linguagens (GO)",
 align = "c"
 )
-
 ```
+
+```{r analise-continua-nota-1, echo=FALSE}
+# 1. Calcular as medidas e salvar em variáveis
+summary_stats_mt <- summary(dados_enem$NU_NOTA_MT, na.rm = TRUE)
+media_mt <- round(mean(dados_enem$NU_NOTA_MT, na.rm = TRUE), 2)
+mediana_mt <- median(dados_enem$NU_NOTA_MT, na.rm = TRUE)
+q1_mt <- quantile(dados_enem$NU_NOTA_MT, 0.25, na.rm = TRUE)
+q3_mt <- quantile(dados_enem$NU_NOTA_MT, 0.75, na.rm = TRUE)
+sd_mt <- round(sd(dados_enem$NU_NOTA_MT, na.rm = TRUE), 2)
+
+# 2. Gráfico: Histograma
+hist(dados_enem$NU_NOTA_MT,
+     main="Gráfico 3: Distribuição das Notas de Matemática (GO)",
+     xlab="Nota de Matemática",
+     ylab="Frequência",
+     col="darkred",
+     breaks = 20)
+
+# 3. Gráfico: Boxplot
+boxplot(dados_enem$NU_NOTA_MT,
+        main="Gráfico 4: Boxplot das Notas de Matemática (GO)",
+        ylab="Nota")
+```
+
+```{r medidas-descritivas-notas, echo=FALSE}
+# --- Estatísticas descritivas das notas ENEM ---
+
+# Pacotes úteis
+library(dplyr)
+library(tibble)
+
+# Seleciona apenas as colunas de interesse
+notas <- dados_enem %>%
+  select(NU_NOTA_CN, NU_NOTA_CH, NU_NOTA_LC, NU_NOTA_MT, NU_NOTA_REDACAO)
+
+# Função para calcular as medidas descritivas de uma variável numérica
+medidas <- function(x) {
+  moda <- as.numeric(names(sort(table(x), decreasing = TRUE))[1])  # Moda simples
+  media <- mean(x, na.rm = TRUE)
+  mediana <- median(x, na.rm = TRUE)
+  quartis <- quantile(x, probs = c(0.25, 0.5, 0.75), na.rm = TRUE)
+  variancia <- var(x, na.rm = TRUE)
+  desvio <- sd(x, na.rm = TRUE)
+  cv <- (desvio / media) * 100
+  
+  c(
+    Média = media,
+    Mediana = mediana,
+    Moda = moda,
+    Q1 = quartis[1],
+    Q3 = quartis[3],
+    Variância = variancia,
+    `Desvio Padrão` = desvio,
+    `Coeficiente de Variação (%)` = cv
+  )
+}
+
+# Aplica a função para cada área
+tabela_medidas <- data.frame(
+  `Ciências da Natureza` = medidas(notas$NU_NOTA_CN),
+  `Ciências Humanas` = medidas(notas$NU_NOTA_CH),
+  `Linguagens` = medidas(notas$NU_NOTA_LC),
+  `Matemática` = medidas(notas$NU_NOTA_MT),
+  `Redação` = medidas(notas$NU_NOTA_REDACAO)
+)
+
+# Transforma em tibble para exibir de forma mais organizada
+tabela_medidas <- tibble::rownames_to_column(as.data.frame(tabela_medidas), "Medida")
+
+# Mostra a tabela
+knitr::kable(tabela_medidas, caption = "Medidas descritivas das notas do ENEM 2024", digits = 2)
+```
+
+```{r medidas-descritivas-acertos, echo=FALSE}
+# --- Estatísticas descritivas das notas ENEM ---
+
+# Pacotes úteis
+library(dplyr)
+library(tibble)
+
+# Seleciona apenas as colunas de interesse
+acertos <- dados_enem %>%
+  select(ACERTOS_CN, ACERTOS_CH, ACERTOS_LC, ACERTOS_MT)
+
+# Função para calcular as medidas descritivas de uma variável numérica
+medidas <- function(x) {
+  moda <- as.numeric(names(sort(table(x), decreasing = TRUE))[1])  # Moda simples
+  media <- mean(x, na.rm = TRUE)
+  mediana <- median(x, na.rm = TRUE)
+  quartis <- quantile(x, probs = c(0.25, 0.5, 0.75), na.rm = TRUE)
+  variancia <- var(x, na.rm = TRUE)
+  desvio <- sd(x, na.rm = TRUE)
+  cv <- (desvio / media) * 100
+  
+  c(
+    Média = media,
+    Mediana = mediana,
+    Moda = moda,
+    Q1 = quartis[1],
+    Q3 = quartis[3],
+    Variância = variancia,
+    `Desvio Padrão` = desvio,
+    `Coeficiente de Variação (%)` = cv
+  )
+}
+
+# Aplica a função para cada área
+tabela_medidas <- data.frame(
+  `Ciências da Natureza` = medidas(acertos$ACERTOS_CN),
+  `Ciências Humanas` = medidas(acertos$ACERTOS_CH),
+  `Linguagens` = medidas(acertos$ACERTOS_LC),
+  `Matemática` = medidas(acertos$ACERTOS_MT)
+)
+
+# Transforma em tibble para exibir de forma mais organizada
+tabela_medidas <- tibble::rownames_to_column(as.data.frame(tabela_medidas), "Medida")
+
+# Mostra a tabela
+knitr::kable(tabela_medidas, caption = "Medidas descritivas dos acertos do ENEM 2024", digits = 2)
+```
+
+
+
 ### Análise: Tipo de Escola (`TP_DEPENDENCIA_ADM_ESC`)
 
 ```{r analise-qualitativa-escola, echo=FALSE}
