@@ -207,66 +207,6 @@ O Histograma (Gráfico 2) ilustra visualmente essa distribuição. É possível 
 
 ## Análise das Variáveis Quantitativas Contínuas
 
-Aqui analisamos as notas, que são a principal medida de desempenho. Usamos a `NU_NOTA_MT` (Nota de Matemática) como exemplo.
-
-### Análise: Nota de Matemática (`NU_NOTA_MT`)
-
-```{r analise-continua-nota, echo=FALSE}
-# 1. Calcular as medidas e salvar em variáveis
-summary_stats_mt <- summary(dados_enem$NU_NOTA_MT, na.rm = TRUE)
-media_mt <- round(mean(dados_enem$NU_NOTA_MT, na.rm = TRUE), 2)
-mediana_mt <- median(dados_enem$NU_NOTA_MT, na.rm = TRUE)
-q1_mt <- quantile(dados_enem$NU_NOTA_MT, 0.25, na.rm = TRUE)
-q3_mt <- quantile(dados_enem$NU_NOTA_MT, 0.75, na.rm = TRUE)
-sd_mt <- round(sd(dados_enem$NU_NOTA_MT, na.rm = TRUE), 2)
-
-# 2. Gráfico: Histograma
-hist(dados_enem$NU_NOTA_MT,
-     main="Gráfico 3: Distribuição das Notas de Matemática (GO)",
-     xlab="Nota de Matemática",
-     ylab="Frequência",
-     col="darkred",
-     breaks = 20)
-
-# 3. Gráfico: Boxplot
-boxplot(dados_enem$NU_NOTA_MT,
-        main="Gráfico 4: Boxplot das Notas de Matemática (GO)",
-        ylab="Nota")
-```
-
-**Interpretação da Análise de Nota de Matemática (Histograma)**
-
-O Histograma (Gráfico 3) ilustra a distribuição das notas de Matemática (`NU_NOTA_MT`). A média geral das notas foi de **`r media_mt`** pontos, um valor muito próximo da mediana, que foi de **`r mediana_mt`** pontos, sugerindo uma distribuição razoavelmente simétrica. Visualmente, o gráfico mostra que a grande maioria dos alunos se concentra na faixa central de desempenho, com o pico da distribuição (a faixa modal) ocorrendo aproximadamente entre 550 e 600 pontos.
-
-**Interpretação da Análise de Nota de Matemática (Boxplot)**
-
-O Boxplot (Gráfico 4) complementa a análise do histograma, fornecendo um resumo claro da dispersão das notas. A linha preta grossa dentro da caixa representa a mediana, **`r mediana_mt`**. A "caixa" em si (o intervalo interquartil) mostra que 50% dos alunos "típicos" se encontram com notas entre **`r q1_mt`** (1º Quartil) e **`r q3_mt`** (3º Quartil).
-
-### Análise: Nota da Redação (`NU_NOTA_REDACAO`)
-
-```{r analise-continua-nota-redacao, echo=FALSE}
-# 1. Calcular estatísticas descritivas da nota de redação
-summary_stats_red <- summary(dados_enem$NU_NOTA_REDACAO, na.rm = TRUE)
-media_red <- round(mean(dados_enem$NU_NOTA_REDACAO, na.rm = TRUE), 2)
-mediana_red <- median(dados_enem$NU_NOTA_REDACAO, na.rm = TRUE)
-q1_red <- quantile(dados_enem$NU_NOTA_REDACAO, 0.25, na.rm = TRUE)
-q3_red <- quantile(dados_enem$NU_NOTA_REDACAO, 0.75, na.rm = TRUE)
-sd_red <- round(sd(dados_enem$NU_NOTA_REDACAO, na.rm = TRUE), 2)
-
-# 2. Gráfico: Histograma
-hist(dados_enem$NU_NOTA_REDACAO,
-     main="Gráfico X: Distribuição das Notas de Redação (GO)",
-     xlab="Nota de Redação",
-     ylab="Frequência",
-     col="purple",
-     breaks=20)
-
-# 3. Gráfico: Boxplot
-boxplot(dados_enem$NU_NOTA_REDACAO,
-        main="Gráfico Y: Boxplot das Notas de Redação (GO)",
-        ylab="Nota de Redação")
-```
-
 ### Análise das Notas
 #### Histogramas
 ```{r analise-continua-notas-histograma, echo=FALSE}
