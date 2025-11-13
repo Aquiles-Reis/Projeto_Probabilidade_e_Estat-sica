@@ -305,15 +305,9 @@ Matemática (MT): A média de acertos foi de **`r medias_acertos["ACERTOS_MT"]`*
 
 ---
 
-## Análise das Variáveis Quantitativas Contínuas
+## Análise das Variáveis Quantitativas Contínuas EM CONJUNTO
 
-Aqui analisamos as notas, que são a principal medida de desempenho. Usamos a `NU_NOTA_MT` (Nota de Matemática) como exemplo.
-
-### Análise: Nota de Matemática (`NU_NOTA_MT`)
-
-### Análise das Notas
-
-#### Histogramas
+### Histogramas
 ```{r analise-continua-notas-histograma, echo=FALSE}
 # Layout compacto com par(mfrow): Histogramas de todas as áreas do ENEM
 
@@ -364,55 +358,76 @@ hist(dados_enem$NU_NOTA_MT,
 par(mfrow = c(1, 1))
 ```
 
-#### Boxplots
+### Boxplots
 ```{r analise-continua-notas-boxplot, echo=FALSE}
-# Layout compacto com par(mfrow): Boxplots de todas as áreas do ENEM
+# 1. Criamos os vetores de nomes e cores
 
-# Define layout: 2 linhas, 3 colunas
-par(mfrow = c(2, 3))
+rotulos_areas <- c("Natureza", "Humanas", "Linguagens", "Redação", "Matemática")
+cores_areas <- c("darkgreen", "darkblue", "darkorange", "purple", "darkred")
 
-# Boxplot - Ciências da Natureza
-boxplot(dados_enem$NU_NOTA_CN,
-        main = "Ciências da Natureza",
-        ylab = "Nota",
-        col = "darkgreen")
+# 2. Reunimos as notas em um único data frame
 
-# Boxplot - Ciências Humanas
-boxplot(dados_enem$NU_NOTA_CH,
-        main = "Ciências Humanas",
-        ylab = "Nota",
-        col = "darkblue")
+notas_enem <- data.frame(
+Natureza = dados_enem$NU_NOTA_CN,
+Humanas = dados_enem$NU_NOTA_CH,
+Linguagens = dados_enem$NU_NOTA_LC,
+Redacao = dados_enem$NU_NOTA_REDACAO,
+Matematica = dados_enem$NU_NOTA_MT
+)
 
-# Boxplot - Linguagens
-boxplot(dados_enem$NU_NOTA_LC,
-        main = "Linguagens",
-        ylab = "Nota",
-        col = "darkorange")
+# 3. Geramos o boxplot comparativo
 
-# Boxplot - Redação
-boxplot(dados_enem$NU_NOTA_REDACAO,
-        main = "Redação",
-        ylab = "Nota",
-        col = "purple")
+boxplot(notas_enem,
+main = "Gráfico X: Notas por Área do ENEM (GO)",
+ylab = "Nota",
+xlab = "Área de Conhecimento",
+names = rotulos_areas,
+col = cores_areas,
+border = "black",
+notch = FALSE)
 
-# Boxplot - Matemática
-boxplot(dados_enem$NU_NOTA_MT,
-        main = "Matemática",
-        ylab = "Nota",
-        col = "darkred")
+# 4. Calculamos as medianas por área
 
-# Voltar ao layout padrão
-par(mfrow = c(1, 1))
+medianas_por_area <- apply(notas_enem, 2, median, na.rm = TRUE)
+
+# 5. Salvamos em variáveis para uso no texto (se desejar citar no relatório)
+
+med_natureza <- round(medianas_por_area["Natureza"], 2)
+med_humanas <- round(medianas_por_area["Humanas"], 2)
+med_linguagens <- round(medianas_por_area["Linguagens"], 2)
+med_redacao <- round(medianas_por_area["Redacao"], 2)
+med_matematica <- round(medianas_por_area["Matematica"], 2)
 
 ```
 
-**Interpretação da Análise de Nota de Matemática (Histograma)**
+**Interpretação da Análise das Notas por Área do ENEM (GO)**
 
-O Histograma (Gráfico 3) ilustra a distribuição das notas de Matemática (`NU_NOTA_MT`). A média geral das notas foi de **`r media_mt`** pontos, um valor muito próximo da mediana, que foi de **`r mediana_mt`** pontos, sugerindo uma distribuição razoavelmente simétrica. Visualmente, o gráfico mostra que a grande maioria dos alunos se concentra na faixa central de desempenho, com o pico da distribuição (a faixa modal) ocorrendo aproximadamente entre 550 e 600 pontos.
+Os gráficos apresentados permitem observar a distribuição e o comportamento das notas nas cinco áreas avaliadas pelo ENEM — Ciências da Natureza, Ciências Humanas, Linguagens, Redação e Matemática — entre os participantes de Goiás.
 
-**Interpretação da Análise de Nota de Matemática (Boxplot)**
+Nos histogramas, nota-se que todas as áreas apresentam distribuições assimétricas, mas com padrões distintos. As **provas objetivas** (Natureza, Humanas, Linguagens e Matemática) mostram uma concentração de notas nas faixas **intermediárias** (entre 400 e 600 pontos), com **assimetria à direita** (cauda voltada para as notas mais altas). Isso indica que a maior parte dos alunos obteve desempenho mediano, com poucos atingindo pontuações muito elevadas.
+A prova de **Redação**, por outro lado, apresenta um comportamento mais **disperso**, com picos em **diferentes faixas de pontuação** e presença de **valores muito baixos**, o que sugere maior heterogeneidade no desempenho dos participantes.
 
-O Boxplot (Gráfico 4) complementa a análise do histograma, fornecendo um resumo claro da dispersão das notas. A linha preta grossa dentro da caixa representa a mediana, **`r mediana_mt`**. A "caixa" em si (o intervalo interquartil) mostra que 50% dos alunos "típicos" se encontram com notas entre **`r q1_mt`** (1º Quartil) e **`r q3_mt`** (3º Quartil).
+No boxplot comparativo, a diferença entre as áreas se torna mais evidente.
+
+- **Linguagens e Redação** se destacam com as **maiores medianas**, indicando melhor desempenho geral nessas áreas.
+
+- **Ciências Humanas** apresenta desempenho **intermediário**, próximo ao de Linguagens.
+
+- **Ciências da Natureza** e, principalmente, **Matemática**, concentram as **menores medianas** e **maior presença de valores atípicos** (outliers) abaixo do limite inferior, evidenciando o desafio que essas disciplinas ainda representam para os candidatos.
+
+Em termos quantitativos, as medianas calculadas foram aproximadamente:
+
+- **Natureza: `r med_natureza`** pontos
+
+- **Humanas: `r med_humanas`** pontos
+
+- **Linguagens: `r med_linguagens`** pontos
+
+- **Redação: `r med_redacao`** pontos
+
+- **Matemática: `r med_matematica`** pontos
+
+De modo geral, as análises confirmam que os participantes de Goiás tendem a ter desempenho melhor nas áreas de Linguagens e Redação, e mais baixo em Matemática e Ciências da Natureza, padrão compatível com o observado em outras edições do ENEM.
 
 ---
 
