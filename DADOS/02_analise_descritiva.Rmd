@@ -4,7 +4,6 @@ output: html_document
 date: "2025-11-11"
 ---
 
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(data.table)
@@ -18,7 +17,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r carregar-dados, echo=FALSE}
-caminho_dados_finais <- "C:/Users/ferna/OneDrive/Área de Trabalho/UFG/Projeto Prob e Estatistica/Projeto_Probabilidade_e_Estat-sica/DADOS/enem_2024_GOIAS_filtrado_final.csv"
+caminho_dados_finais <- "enem_2024_GOIAS_filtrado_final.csv"
 
 dados_enem <- fread(caminho_dados_finais)
 
@@ -28,147 +27,104 @@ dados_enem <- fread(caminho_dados_finais)
 ---
 
 ## Tabelas de Frequências dos Acertos
+
 Acertos Ciências da Natureza
 ```{r tabela-frequencias-1, echo=FALSE}
 acertos_cn <- na.omit(dados_enem$ACERTOS_CN)
-
-intervalos <- cut(
+intervalos_cn <- cut(
   acertos_cn,
-  breaks = seq(0, max(acertos_cn) + 5.001, by = 5),  # de 0 até o máximo, de 5 em 5
-  right = FALSE,  # [5,10) → intervalo fechado à esquerda
-  include.lowest = TRUE
+  breaks = seq(0, max(acertos_cn) + 4.999, by = 5), 
+  right = FALSE, include.lowest = TRUE
 )
-
-freq_abs <- table(intervalos) # frequência absoluta
-freq_rel <- round(prop.table(freq_abs) * 100, 2) # frequência relativa (%)
-freq_acum <- cumsum(freq_rel) # frequência acumulada (%)
-
-tabela_freq_acertos <- data.frame(
-"Intervalo de Acertos" = names(freq_abs),
-"Frequência Absoluta" = as.vector(freq_abs),
-"Frequência Relativa (%)" = as.vector(freq_rel),
-"Frequência Acumulada (%)" = as.vector(freq_acum)
+freq_abs_cn <- table(intervalos_cn)
+freq_rel_cn <- round(prop.table(freq_abs_cn) * 100, 2)
+freq_acum_cn <- cumsum(freq_rel_cn)
+tabela_freq_cn <- data.frame(
+  "Intervalo de Acertos" = names(freq_abs_cn),
+  "Frequência Absoluta" = as.vector(freq_abs_cn),
+  "Frequência Relativa (%)" = as.vector(freq_rel_cn),
+  "Frequência Acumulada (%)" = as.vector(freq_acum_cn)
 )
-
-
 knitr::kable(
-tabela_freq_acertos,
-caption = "Tabela 1: Distribuição de Frequência - Acertos em Ciências da Natureza (GO)",
-align = "c"
+  tabela_freq_cn,
+  caption = "Tabela 1.1: Distribuição de Frequência - Acertos em Ciências da Natureza (GO)",
+  align = "c"
 )
 ```
 
 Acertos Ciências Humanas
 ```{r tabela-frequencias-2, echo=FALSE}
 acertos_ch <- na.omit(dados_enem$ACERTOS_CH)
-
-intervalos <- cut(
+intervalos_ch <- cut(
   acertos_ch,
-  breaks = seq(0, max(acertos_ch), by = 5)  ,  # de 0 até o máximo, de 5 em 5
-  right = FALSE,  # [5,10) → intervalo fechado à esquerda
-  include.lowest = TRUE
+  breaks = seq(0, max(acertos_ch) + 4.999, by = 5), # CORRIGIDO
+  right = FALSE, include.lowest = TRUE
 )
-
-freq_abs <- table(intervalos) # frequência absoluta
-freq_rel <- round(prop.table(freq_abs) * 100, 2) # frequência relativa (%)
-freq_acum <- cumsum(freq_rel) # frequência acumulada (%)
-
-tabela_freq_acertos <- data.frame(
-"Intervalo de Acertos" = names(freq_abs),
-"Frequência Absoluta" = as.vector(freq_abs),
-"Frequência Relativa (%)" = as.vector(freq_rel),
-"Frequência Acumulada (%)" = as.vector(freq_acum)
+freq_abs_ch <- table(intervalos_ch)
+freq_rel_ch <- round(prop.table(freq_abs_ch) * 100, 2)
+freq_acum_ch <- cumsum(freq_rel_ch)
+tabela_freq_ch <- data.frame(
+  "Intervalo de Acertos" = names(freq_abs_ch),
+  "Frequência Absoluta" = as.vector(freq_abs_ch),
+  "Frequência Relativa (%)" = as.vector(freq_rel_ch),
+  "Frequência Acumulada (%)" = as.vector(freq_acum_ch)
 )
-
-
 knitr::kable(
-tabela_freq_acertos,
-caption = "Tabela 1: Distribuição de Frequência - Acertos em Ciências Humanas (GO)",
-align = "c"
+  tabela_freq_ch,
+  caption = "Tabela 1.2: Distribuição de Frequência - Acertos em Ciências Humanas (GO)",
+  align = "c"
 )
 ```
 
 Acertos Matemática
 ```{r tabela-frequencias-3, echo=FALSE}
 acertos_mt <- na.omit(dados_enem$ACERTOS_MT)
-
-intervalos <- cut(
+intervalos_mt <- cut(
   acertos_mt,
-  breaks = seq(0, max(acertos_mt), by = 5),  # de 0 até o máximo, de 5 em 5
-  right = FALSE,  # [5,10) → intervalo fechado à esquerda
-  include.lowest = TRUE
+  breaks = seq(0, max(acertos_mt) + 4.999, by = 5), # CORRIGIDO
+  right = FALSE, include.lowest = TRUE
 )
-
-freq_abs <- table(intervalos) # frequência absoluta
-freq_rel <- round(prop.table(freq_abs) * 100, 2) # frequência relativa (%)
-freq_acum <- cumsum(freq_rel) # frequência acumulada (%)
-
-tabela_freq_acertos <- data.frame(
-"Intervalo de Acertos" = names(freq_abs),
-"Frequência Absoluta" = as.vector(freq_abs),
-"Frequência Relativa (%)" = as.vector(freq_rel),
-"Frequência Acumulada (%)" = as.vector(freq_acum)
+freq_abs_mt <- table(intervalos_mt)
+freq_rel_mt <- round(prop.table(freq_abs_mt) * 100, 2)
+freq_acum_mt <- cumsum(freq_rel_mt)
+tabela_freq_mt <- data.frame(
+  "Intervalo de Acertos" = names(freq_abs_mt),
+  "Frequência Absoluta" = as.vector(freq_abs_mt),
+  "Frequência Relativa (%)" = as.vector(freq_rel_mt),
+  "Frequência Acumulada (%)" = as.vector(freq_acum_mt)
 )
-
-
 knitr::kable(
-tabela_freq_acertos,
-caption = "Tabela 1: Distribuição de Frequência - Acertos em Matemática (GO)",
-align = "c"
+  tabela_freq_mt,
+  caption = "Tabela 1.3: Distribuição de Frequência - Acertos em Matemática (GO)",
+  align = "c"
 )
 ```
+
 Acertos Linguagens
 ```{r tabela-frequencias-4, echo=FALSE}
 acertos_lc <- na.omit(dados_enem$ACERTOS_LC)
-
-intervalos <- cut(
+intervalos_lc <- cut(
   acertos_lc,
-  breaks = seq(0, max(acertos_lc), by = 5),  # de 0 até o máximo, de 5 em 5
-  right = FALSE,  # [5,10) → intervalo fechado à esquerda
-  include.lowest = TRUE
+  breaks = seq(0, max(acertos_lc) + 4.999, by = 5), # CORRIGIDO
+  right = FALSE, include.lowest = TRUE
 )
-
-freq_abs <- table(intervalos) # frequência absoluta
-freq_rel <- round(prop.table(freq_abs) * 100, 2) # frequência relativa (%)
-freq_acum <- cumsum(freq_rel) # frequência acumulada (%)
-
-tabela_freq_acertos <- data.frame(
-"Intervalo de Acertos" = names(freq_abs),
-"Frequência Absoluta" = as.vector(freq_abs),
-"Frequência Relativa (%)" = as.vector(freq_rel),
-"Frequência Acumulada (%)" = as.vector(freq_acum)
+freq_abs_lc <- table(intervalos_lc)
+freq_rel_lc <- round(prop.table(freq_abs_lc) * 100, 2)
+freq_acum_lc <- cumsum(freq_rel_lc)
+tabela_freq_lc <- data.frame(
+  "Intervalo de Acertos" = names(freq_abs_lc),
+  "Frequência Absoluta" = as.vector(freq_abs_lc),
+  "Frequência Relativa (%)" = as.vector(freq_rel_lc),
+  "Frequência Acumulada (%)" = as.vector(freq_acum_lc)
 )
-
-
 knitr::kable(
-tabela_freq_acertos,
-caption = "Tabela 1: Distribuição de Frequência - Acertos em Linguagens (GO)",
-align = "c"
+  tabela_freq_lc,
+  caption = "Tabela 1.4: Distribuição de Frequência - Acertos em Linguagens (GO)",
+  align = "c"
 )
 ```
 
-```{r analise-continua-nota-1, echo=FALSE}
-# 1. Calcular as medidas e salvar em variáveis
-summary_stats_mt <- summary(dados_enem$NU_NOTA_MT, na.rm = TRUE)
-media_mt <- round(mean(dados_enem$NU_NOTA_MT, na.rm = TRUE), 2)
-mediana_mt <- median(dados_enem$NU_NOTA_MT, na.rm = TRUE)
-q1_mt <- quantile(dados_enem$NU_NOTA_MT, 0.25, na.rm = TRUE)
-q3_mt <- quantile(dados_enem$NU_NOTA_MT, 0.75, na.rm = TRUE)
-sd_mt <- round(sd(dados_enem$NU_NOTA_MT, na.rm = TRUE), 2)
-
-# 2. Gráfico: Histograma
-hist(dados_enem$NU_NOTA_MT,
-     main="Gráfico 3: Distribuição das Notas de Matemática (GO)",
-     xlab="Nota de Matemática",
-     ylab="Frequência",
-     col="darkred",
-     breaks = 20)
-
-# 3. Gráfico: Boxplot
-boxplot(dados_enem$NU_NOTA_MT,
-        main="Gráfico 4: Boxplot das Notas de Matemática (GO)",
-        ylab="Nota")
-```
+---
 
 ```{r medidas-descritivas-notas, echo=FALSE}
 # --- Estatísticas descritivas das notas ENEM ---
@@ -218,7 +174,7 @@ tabela_medidas <- tibble::rownames_to_column(as.data.frame(tabela_medidas), "Med
 # Mostra a tabela
 knitr::kable(tabela_medidas, caption = "Medidas descritivas das notas do ENEM 2024", digits = 2)
 ```
-
+---
 ```{r medidas-descritivas-acertos, echo=FALSE}
 # --- Estatísticas descritivas das notas ENEM ---
 
@@ -267,7 +223,7 @@ tabela_medidas <- tibble::rownames_to_column(as.data.frame(tabela_medidas), "Med
 knitr::kable(tabela_medidas, caption = "Medidas descritivas dos acertos do ENEM 2024", digits = 2)
 ```
 
-
+---
 
 ### Análise: Tipo de Escola (`TP_DEPENDENCIA_ADM_ESC`)
 
@@ -301,42 +257,62 @@ Como esperado para participantes do Ensino Médio, a participação de escolas *
 
 ---
 
-## Análise das Variáveis Quantitativas Discretas
+## Análise das Variáveis Quantitativas Discretas EM CONJUNTO
 
-Agora, analisamos as variáveis contáveis. Usamos o número de acertos em Ciências da Natureza (`ACERTOS_CN`) como nosso exemplo.
+```{r analise-discreta-acertos-conjunto, echo=FALSE}
+# 1. Definir as colunas que vamos analisar
+cols_discretas <- c("ACERTOS_CN", "ACERTOS_CH", "ACERTOS_LC", "ACERTOS_MT")
 
-### Análise: Acertos em Ciências da Natureza (`ACERTOS_CN`)
+# 2. Calcular as medidas (CORREÇÃO DEFINITIVA: argumentos nomeados)
+medias_acertos <- round(sapply(dados_enem[, ..cols_discretas], mean, na.rm = TRUE), 2)
+medianas_acertos <- sapply(dados_enem[, ..cols_discretas], median, na.rm = TRUE)
+q1_acertos <- sapply(dados_enem[, ..cols_discretas], quantile, probs = 0.25, na.rm = TRUE, names = FALSE)
+q3_acertos <- sapply(dados_enem[, ..cols_discretas], quantile, probs = 0.75, na.rm = TRUE, names = FALSE)
 
-```{r analise-discreta-acertos, echo=FALSE}
-# 1. Calcular as medidas e salvar em variáveis
-# (Usamos na.rm=TRUE para ignorar valores ausentes/NA)
-media_acertos_cn <- round(mean(dados_enem$ACERTOS_CN, na.rm = TRUE), 2)
-mediana_acertos_cn <- median(dados_enem$ACERTOS_CN, na.rm = TRUE)
-q1_acertos_cn <- quantile(dados_enem$ACERTOS_CN, 0.25, na.rm = TRUE)
-q3_acertos_cn <- quantile(dados_enem$ACERTOS_CN, 0.75, na.rm = TRUE)
+# 3. Criar dataframes filtrados (para os gráficos, remover ausentes)
+presentes_dia1 <- dados_enem[!is.na(NU_NOTA_CH) & !is.na(NU_NOTA_LC)] # Ausentes CH/LC
+presentes_dia2 <- dados_enem[!is.na(NU_NOTA_CN) & !is.na(NU_NOTA_MT)] # Ausentes CN/MT
 
-# 2. Gerar o Histograma
-hist(dados_enem$ACERTOS_CN,
-     main="Gráfico 2: Distribuição de Acertos em CN (GO)",
-     xlab="Número de Acertos",
-     ylab="Frequência (Nº de Alunos)",
-     col="darkgreen",
-     breaks = 20) 
+# 4. Configurar a janela gráfica para um grid 2x2
+par(mfrow = c(2, 2))
+
+# 5. Gerar os 4 histogramas USANDO OS DADOS FILTRADOS e BREAKS DE 5 EM 5
+hist(presentes_dia2$ACERTOS_CN, main="Acertos em CN (Presentes)", xlab="Acertos", ylab="Freq.", col="blue", breaks = seq(0, 45, by = 5), right = FALSE)
+hist(presentes_dia1$ACERTOS_CH, main="Acertos em CH (Presentes)", xlab="Acertos", ylab="Freq.", col="red", breaks = seq(0, 45, by = 5), right = FALSE)
+hist(presentes_dia1$ACERTOS_LC, main="Acertos em LC (Presentes)", xlab="Acertos", ylab="Freq.", col="green", breaks = seq(0, 45, by = 5), right = FALSE)
+hist(presentes_dia2$ACERTOS_MT, main="Acertos em MT (Presentes)", xlab="Acertos", ylab="Freq.", col="purple", breaks = seq(0, 45, by = 5), right = FALSE)
 ```
 
-**Interpretação da Análise de Acertos em CN**
+**Interpretação da Análise de Acertos de Todas as Áreas**
 
-A análise do `ACERTOS_CN` nos dá uma visão clara do desempenho. A média de acertos foi de **`r media_acertos_cn`**, enquanto a mediana (o valor central, 50%) foi de **`r mediana_acertos_cn`** acertos.
+Os Histogramas ilustram visualmente a distribuição do número de acertos (dos alunos presentes) nas quatro áreas de prova. É possível observar um padrão consistente em todas elas: uma clara **assimetria à direita** (ou assimetria positiva), o que significa que a maioria dos alunos se concentra nas faixas de acertos mais baixas.
 
-O `summary` também indica que 50% dos alunos (o intervalo interquartil) acertaram entre **`r q1_acertos_cn`** (1º Quartil) e **`r q3_acertos_cn`** (3º Quartil) questões.
+Comparativamente, as provas de Linguagens (LC) e Humanas (CH) apresentam medianas de acertos mais altas do que Ciências da Natureza (CN) e Matemática (MT), indicando um desempenho geral superior nas provas do primeiro dia.
 
-O Histograma (Gráfico 2) ilustra visualmente essa distribuição. É possível observar uma clara **assimetria à direita** (ou assimetria positiva), o que significa que a maioria dos alunos se concentra nas faixas de acertos mais baixas. A frequência de alunos diminui consideravelmente após os 30 acertos, mostrando que poucos participantes alcançaram as pontuações mais altas na prova.
+Os summaries estatísticos confirmam essa tendência:
+
+Ciências da Natureza (CN): A média de acertos foi de **`r medias_acertos["ACERTOS_CN"]`**, enquanto a mediana (o valor central, 50%) foi de **`r medianas_acertos["ACERTOS_CN"]`**. 
+50% dos alunos (o intervalo interquartil) acertaram entre **`r q1_acertos["ACERTOS_CN"]`** (1º Quartil) e **`r q3_acertos["ACERTOS_CN"]`** (3º Quartil) questões.
+
+Ciências Humanas (CH): A média de acertos foi de **`r medias_acertos["ACERTOS_CH"]`**, enquanto a mediana foi de **`r medianas_acertos["ACERTOS_CH"]`**. 
+50% dos alunos acertaram entre **`r q1_acertos["ACERTOS_CH"]`** (1º Quartil) e **`r q3_acertos["ACERTOS_CH"]`** (3º Quartil) questões.
+
+Linguagens e Códigos (LC): A média de acertos foi de **`r medias_acertos["ACERTOS_LC"]`**, enquanto a mediana foi de **`r medianas_acertos["ACERTOS_LC"]`**. 
+50% dos alunos acertaram entre **`r q1_acertos["ACERTOS_LC"]`** (1º Quartil) e **`r q3_acertos["ACERTOS_LC"]`** (3º Quartil) questões.
+
+Matemática (MT): A média de acertos foi de **`r medias_acertos["ACERTOS_MT"]`**, enquanto a mediana foi de **`r medianas_acertos["ACERTOS_MT"]`**. 
+50% dos alunos acertaram entre **`r q1_acertos["ACERTOS_MT"]`** (1º Quartil) e **`r q3_acertos["ACERTOS_MT"]`** (3º Quartil) questões.
 
 ---
 
 ## Análise das Variáveis Quantitativas Contínuas
 
+Aqui analisamos as notas, que são a principal medida de desempenho. Usamos a `NU_NOTA_MT` (Nota de Matemática) como exemplo.
+
+### Análise: Nota de Matemática (`NU_NOTA_MT`)
+
 ### Análise das Notas
+
 #### Histogramas
 ```{r analise-continua-notas-histograma, echo=FALSE}
 # Layout compacto com par(mfrow): Histogramas de todas as áreas do ENEM
@@ -430,6 +406,14 @@ par(mfrow = c(1, 1))
 
 ```
 
+**Interpretação da Análise de Nota de Matemática (Histograma)**
+
+O Histograma (Gráfico 3) ilustra a distribuição das notas de Matemática (`NU_NOTA_MT`). A média geral das notas foi de **`r media_mt`** pontos, um valor muito próximo da mediana, que foi de **`r mediana_mt`** pontos, sugerindo uma distribuição razoavelmente simétrica. Visualmente, o gráfico mostra que a grande maioria dos alunos se concentra na faixa central de desempenho, com o pico da distribuição (a faixa modal) ocorrendo aproximadamente entre 550 e 600 pontos.
+
+**Interpretação da Análise de Nota de Matemática (Boxplot)**
+
+O Boxplot (Gráfico 4) complementa a análise do histograma, fornecendo um resumo claro da dispersão das notas. A linha preta grossa dentro da caixa representa a mediana, **`r mediana_mt`**. A "caixa" em si (o intervalo interquartil) mostra que 50% dos alunos "típicos" se encontram com notas entre **`r q1_mt`** (1º Quartil) e **`r q3_mt`** (3º Quartil).
+
 ---
 
 ## Análise Comparativa (Cruzamento de Variáveis)
@@ -478,7 +462,6 @@ A diferença de desempenho é nítida:
 4.  **Escolas Municipais:** Este grupo, estatisticamente pequeno (**`r tabela_escola_porc["Municipal"]`%**), apresenta o menor desempenho, com uma mediana de **`r med_municipal`** pontos.
 
 Em suma, o gráfico demonstra uma forte correlação entre a dependência administrativa da escola e o desempenho dos alunos na prova de matemática em Goiás.
-
 
 ---
 
