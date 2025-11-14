@@ -384,6 +384,46 @@ Matemática (MT): A média de acertos foi de **`r medias_acertos["ACERTOS_MT"]`*
 50% dos alunos acertaram entre **`r q1_acertos["ACERTOS_MT"]`** (1º Quartil) e **`r q3_acertos["ACERTOS_MT"]`** (3º Quartil) questões.
 
 ---
+###Boxplots
+
+```{r analise-discretas-acertos-boxplot, echo=FALSE}
+# 1. Criamos os vetores de nomes e cores
+
+rotulos_areas <- c("Natureza", "Humanas", "Linguagens", "Matemática")
+cores_areas <- c("darkgreen", "darkblue", "darkorange", "darkred")
+
+# 2. Reunimos as notas em um único data frame
+
+acertos_enem <- data.frame(
+Natureza = dados_enem$ACERTOS_CN,
+Humanas = dados_enem$ACERTOS_CH,
+Linguagens = dados_enem$ACERTOS_LC,
+Matematica = dados_enem$ACERTOS_MT
+)
+
+# 3. Geramos o boxplot comparativo
+
+boxplot(acertos_enem,
+main = "Gráfico X: Acertos por Área do ENEM (GO)",
+ylab = "Acertos",
+xlab = "Área de Conhecimento",
+names = rotulos_areas,
+col = cores_areas,
+border = "black",
+notch = FALSE)
+
+# 4. Calculamos as medianas por área
+
+medianas_por_area <- apply(acertos_enem, 2, median, na.rm = TRUE)
+
+# 5. Salvamos em variáveis para uso no texto (se desejar citar no relatório)
+
+med_natureza <- round(medianas_por_area["Natureza"], 2)
+med_humanas <- round(medianas_por_area["Humanas"], 2)
+med_linguagens <- round(medianas_por_area["Linguagens"], 2)
+med_matematica <- round(medianas_por_area["Matematica"], 2)
+
+```
 
 ## Análise das Variáveis Quantitativas Contínuas EM CONJUNTO
 
@@ -621,4 +661,5 @@ O resumo do modelo estatístico nos fornece os seguintes indicadores-chave:
     * O R-quadrado do modelo foi de **`r r_quadrado`**. Isso significa que **`r r_quadrado * 100`%** da variação nas notas de Matemática podem ser estatisticamente explicadas pela variação nas notas de Ciências da Natureza.
 
 3.  **Significância (P-Valor):**
+
     * O P-valor para o coeficiente B1 foi de **`r p_valor`** (ou um valor muito próximo de zero). Como este valor é muito menor que 0.05, confirmamos que a relação entre as duas notas é **estatisticamente significante**.
