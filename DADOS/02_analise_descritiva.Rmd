@@ -707,3 +707,64 @@ O resumo do modelo estatístico nos fornece os seguintes indicadores-chave:
 
 3.  **Significância (P-Valor):**
     * O P-valor para o coeficiente B1 foi de **`r p_valor`** (ou um valor muito próximo de zero). Como este valor é muito menor que 0.05, confirmamos que a relação entre as duas notas é **estatisticamente significante**.
+
+## Análise de Regressão Linear Simples
+
+O objetivo desta análise é verificar se o desempenho do participante em **Linguagens e Códigos (ACERTOS_LC)** pode ser usado para prever sua **nota de Redação (NU_NOTA_REDACAO)**.
+
+* Variável Dependente (Y): `NU_NOTA_REDACAO`
+* Variável Independente (X): `ACERTOS_LC`
+
+### Análise: `NU_NOTA_REDACAO` vs. `ACERTOS_LC`
+
+```{r regressao-red-lc, echo=FALSE}
+# 1. Ajustar o modelo de regressão linear
+modelo_red_lc <- lm(NU_NOTA_REDACAO ~ ACERTOS_LC, data = dados_enem)
+
+# 2. Obter o resumo estatístico do modelo
+summary_red_lc <- summary(modelo_red_lc)
+
+# 3. Extrair estatísticas importantes
+coeficientes <- summary_red_lc$coefficients
+intercepto_b0 <- round(coeficientes[1, 1], 4)   # Intercepto B0
+slope_b1 <- round(coeficientes[2, 1], 4)        # Inclinação B1
+p_valor <- coeficientes[2, 4]                   # P-valor
+r_quadrado <- round(summary_red_lc$r.squared, 4) # R-quadrado
+
+# 4. Gerar gráfico de dispersão
+plot(dados_enem$ACERTOS_LC, dados_enem$NU_NOTA_REDACAO,
+     main="Gráfico 8: Regressão Linear - Nota Redação vs. Acertos em LC",
+     xlab="Acertos em Linguagens (X)",
+     ylab="Nota de Redação (Y)",
+     pch = 19,
+     cex = 0.5,
+     col = "blue"
+)
+
+# 5. Adicionar a linha de regressão ao gráfico
+abline(modelo_red_lc, col = "red", lwd = 3)
+```
+
+## Interpretação da Análise de Regressão
+
+O gráfico acima mostra o diagrama de dispersão entre o número de acertos em Linguagens (eixo X) e a nota de Redação (eixo Y). A linha vermelha representa o modelo de regressão linear simples.
+
+Visualmente, os pontos formam uma nuvem que sobe da esquerda para a direita, indicando uma **correlação linear positiva** entre as duas variáveis: quanto maior o número de acertos em LC, maior tende a ser a nota de Redação.
+
+**Interpretação do Modelo Estatístico**
+
+O resumo do modelo estatístico nos fornece os seguintes indicadores-chave:
+
+1. **Coeficientes (A Equação da Reta)**
+    * **Intercepto (B0):** `r intercepto_b0`.  
+  Este é o valor teórico da nota de Redação caso o participante tivesse **0 acertos em Linguagens**.
+    * **Slope (B1 – ACERTOS_LC):** `r slope_b1`.  
+  Esse é o coeficiente mais importante. Ele indica que, em média, para cada **1 acerto adicional** em Linguagens, espera-se um aumento de **`r slope_b1`** pontos na nota de Redação.
+
+2. **Coeficiente de Determinação (R²)**
+    * O R-quadrado encontrado foi de **`r r_quadrado`**.  
+Isso significa que **`r r_quadrado * 100`%** da variação nas notas de Redação pode ser explicada pelas diferenças no número de acertos em Linguagens.
+
+3. **Significância (P-Valor)**
+    * O P-valor do coeficiente B1 é **`r p_valor`** (muito próximo de zero).  
+Como este valor é muito menor que 0.05, concluímos que a relação entre acertos em LC e nota de Redação é **estatisticamente significante**.
