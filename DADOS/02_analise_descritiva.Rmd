@@ -30,208 +30,43 @@ dados_enem <- fread(caminho_dados_finais)
 #summary(dados_enem)
 ```
 
-***
+# Introdução: Análise de Desempenho dos Concluintes do ENEM 2024 em Goiás
 
-## Tabelas de Frequências dos Acertos
+## Contexto e Objetivo
 
+O Exame Nacional do Ensino Médio (ENEM) é, atualmente, o principal instrumento de avaliação da educação básica brasileira e a porta de entrada para a vasta maioria das instituições de ensino superior públicas e privadas do país. Compreender os resultados do exame não é apenas uma forma de medir o desempenho acadêmico individual, mas também uma ferramenta poderosa para o diagnóstico de políticas públicas educacionais, identificação de disparidades e compreensão dos desafios enfrentados por diferentes grupos de estudantes.
 
-### Acertos Ciências da Natureza
-```{r tabela-frequencias-1, echo=FALSE}
-acertos_cn <- na.omit(dados_enem$ACERTOS_CN)
-intervalos_cn <- cut(
-  acertos_cn,
-  breaks = seq(0, max(acertos_cn) + 4.999, by = 5), 
-  right = FALSE, include.lowest = TRUE
-)
-freq_abs_cn <- table(intervalos_cn)
-freq_rel_cn <- round(prop.table(freq_abs_cn) * 100, 2)
-freq_acum_cn <- cumsum(freq_rel_cn)
-tabela_freq_cn <- data.frame(
-  "Intervalo de Acertos" = names(freq_abs_cn),
-  "Frequência Absoluta" = as.vector(freq_abs_cn),
-  "Frequência Relativa (%)" = as.vector(freq_rel_cn),
-  "Frequência Acumulada (%)" = as.vector(freq_acum_cn)
-)
-knitr::kable(
-  tabela_freq_cn,
-  caption = "Tabela 1.1: Distribuição de Frequência - Acertos em Ciências da Natureza (GO)",
-  align = "c"
-)
-```
+O objetivo central deste relatório é realizar uma análise descritiva, comparativa e preditiva detalhada dos resultados do ENEM 2024, focando especificamente no desempenho dos estudantes do estado de Goiás.
 
+## Escopo da Análise e Metodologia
 
-### Acertos Ciências Humanas
-```{r tabela-frequencias-2, echo=FALSE}
-acertos_ch <- na.omit(dados_enem$ACERTOS_CH)
-intervalos_ch <- cut(
-  acertos_ch,
-  breaks = seq(0, max(acertos_ch) + 4.999, by = 5), # CORRIGIDO
-  right = FALSE, include.lowest = TRUE
-)
-freq_abs_ch <- table(intervalos_ch)
-freq_rel_ch <- round(prop.table(freq_abs_ch) * 100, 2)
-freq_acum_ch <- cumsum(freq_rel_ch)
-tabela_freq_ch <- data.frame(
-  "Intervalo de Acertos" = names(freq_abs_ch),
-  "Frequência Absoluta" = as.vector(freq_abs_ch),
-  "Frequência Relativa (%)" = as.vector(freq_rel_ch),
-  "Frequência Acumulada (%)" = as.vector(freq_acum_ch)
-)
-knitr::kable(
-  tabela_freq_ch,
-  caption = "Tabela 1.2: Distribuição de Frequência - Acertos em Ciências Humanas (GO)",
-  align = "c"
-)
-```
+Para garantir a relevância e a precisão das conclusões, esta análise utiliza uma base de dados cuidadosamente filtrada, que se concentra em um público-alvo específico:
 
+**Localização:** A análise restringe-se exclusivamente aos participantes do estado de Goiás (GO).
 
-### Acertos Matemática
-```{r tabela-frequencias-3, echo=FALSE}
-acertos_mt <- na.omit(dados_enem$ACERTOS_MT)
-intervalos_mt <- cut(
-  acertos_mt,
-  breaks = seq(0, max(acertos_mt) + 4.999, by = 5), # CORRIGIDO
-  right = FALSE, include.lowest = TRUE
-)
-freq_abs_mt <- table(intervalos_mt)
-freq_rel_mt <- round(prop.table(freq_abs_mt) * 100, 2)
-freq_acum_mt <- cumsum(freq_rel_mt)
-tabela_freq_mt <- data.frame(
-  "Intervalo de Acertos" = names(freq_abs_mt),
-  "Frequência Absoluta" = as.vector(freq_abs_mt),
-  "Frequência Relativa (%)" = as.vector(freq_rel_mt),
-  "Frequência Acumulada (%)" = as.vector(freq_acum_mt)
-)
-knitr::kable(
-  tabela_freq_mt,
-  caption = "Tabela 1.3: Distribuição de Frequência - Acertos em Matemática (GO)",
-  align = "c"
-)
-```
+**Perfil do Aluno:** O estudo foca apenas nos participantes "regulares", ou seja, aqueles que estavam cursando e concluindo o 3º ano do Ensino Médio no ano de 2024.
 
+**Participação:** Foram excluídos da base todos os participantes que faltaram em um ou nos dois dias de prova, bem como aqueles que foram eliminados.
 
-### Acertos Linguagens
-```{r tabela-frequencias-4, echo=FALSE}
-acertos_lc <- na.omit(dados_enem$ACERTOS_LC)
-intervalos_lc <- cut(
-  acertos_lc,
-  breaks = seq(0, max(acertos_lc) + 4.999, by = 5), # CORRIGIDO
-  right = FALSE, include.lowest = TRUE
-)
-freq_abs_lc <- table(intervalos_lc)
-freq_rel_lc <- round(prop.table(freq_abs_lc) * 100, 2)
-freq_acum_lc <- cumsum(freq_rel_lc)
-tabela_freq_lc <- data.frame(
-  "Intervalo de Acertos" = names(freq_abs_lc),
-  "Frequência Absoluta" = as.vector(freq_abs_lc),
-  "Frequência Relativa (%)" = as.vector(freq_rel_lc),
-  "Frequência Acumulada (%)" = as.vector(freq_acum_lc)
-)
-knitr::kable(
-  tabela_freq_lc,
-  caption = "Tabela 1.4: Distribuição de Frequência - Acertos em Linguagens (GO)",
-  align = "c"
-)
-```
+Essa filtragem é crucial, pois garante que a análise de desempenho (notas e acertos) seja feita apenas sobre o grupo de alunos que efetivamente completou todo o ciclo avaliativo do exame.
 
-***
+## Estrutura do Relatório
 
-## Estatísticas descritivas das notas ENEM
-```{r medidas-descritivas-notas, echo=FALSE}
-# Pacotes úteis
-library(dplyr)
-library(tibble)
+A análise está estruturada em etapas progressivas para construir um entendimento completo dos dados:
 
-# Seleciona apenas as colunas de interesse
-notas <- dados_enem %>%
-  select(NU_NOTA_CN, NU_NOTA_CH, NU_NOTA_LC, NU_NOTA_MT, NU_NOTA_REDACAO)
+**Análise de Variáveis Qualitativas:** Inicia-se traçando o perfil demográfico dos participantes, investigando a distribuição por Tipo de Escola (Federal, Estadual, Privada, Municipal) e a escolha da Língua Estrangeira (Inglês ou Espanhol).
 
-# Função para calcular as medidas descritivas de uma variável numérica
-medidas <- function(x) {
-  moda <- as.numeric(names(sort(table(x), decreasing = TRUE))[1])  # Moda simples
-  media <- mean(x, na.rm = TRUE)
-  mediana <- median(x, na.rm = TRUE)
-  quartis <- quantile(x, probs = c(0.25, 0.5, 0.75), na.rm = TRUE)
-  variancia <- var(x, na.rm = TRUE)
-  desvio <- sd(x, na.rm = TRUE)
-  cv <- (desvio / media) * 100
-  
-  c(
-    Média = media,
-    Mediana = mediana,
-    Moda = moda,
-    Q1 = quartis[1],
-    Q3 = quartis[3],
-    Variância = variancia,
-    `Desvio Padrão` = desvio,
-    `Coeficiente de Variação (%)` = cv
-  )
-}
+**Análise de Variáveis Quantitativas:** O núcleo da análise descritiva, onde avaliamos o desempenho acadêmico. Esta seção é dividida em:
 
-# Aplica a função para cada área
-tabela_medidas <- data.frame(
-  `Ciências da Natureza` = medidas(notas$NU_NOTA_CN),
-  `Ciências Humanas` = medidas(notas$NU_NOTA_CH),
-  `Linguagens` = medidas(notas$NU_NOTA_LC),
-  `Matemática` = medidas(notas$NU_NOTA_MT),
-  `Redação` = medidas(notas$NU_NOTA_REDACAO)
-)
+  **Análise de Acertos (Discretas):** Verificação do número de acertos em cada uma das quatro provas objetivas (Ciências da Natureza, Ciências Humanas, Linguagens e Matemática).
 
-# Transforma em tibble para exibir de forma mais organizada
-tabela_medidas <- tibble::rownames_to_column(as.data.frame(tabela_medidas), "Medida")
+  **Análise de Notas (Contínuas):** Avaliação das notas finais (calculadas via TRI) e da nota da Redação.
 
-# Mostra a tabela
-knitr::kable(tabela_medidas, caption = "Medidas descritivas das notas do ENEM 2024", digits = 2)
-```
+Em ambas as subseções, são utilizadas tabelas de frequência, medidas de tendência central e dispersão (média, mediana, quartis), e visualizações gráficas (Histogramas e Boxplots) para comparar o desempenho entre as áreas.
 
-***
+**Análise Comparativa (Cruzamento de Variáveis):** Esta seção aprofunda a investigação ao cruzar variáveis, buscando identificar padrões de desempenho. O foco é dado na comparação das notas de Matemática e Redação entre os diferentes tipos de administração escolar.
 
-## Estatísticas descritivas dos acertos ENEM
-```{r medidas-descritivas-acertos, echo=FALSE}
-# Pacotes úteis
-library(dplyr)
-library(tibble)
-
-# Seleciona apenas as colunas de interesse
-acertos <- dados_enem %>%
-  select(ACERTOS_CN, ACERTOS_CH, ACERTOS_LC, ACERTOS_MT)
-
-# Função para calcular as medidas descritivas de uma variável numérica
-medidas <- function(x) {
-  moda <- as.numeric(names(sort(table(x), decreasing = TRUE))[1])  # Moda simples
-  media <- mean(x, na.rm = TRUE)
-  mediana <- median(x, na.rm = TRUE)
-  quartis <- quantile(x, probs = c(0.25, 0.5, 0.75), na.rm = TRUE)
-  variancia <- var(x, na.rm = TRUE)
-  desvio <- sd(x, na.rm = TRUE)
-  cv <- (desvio / media) * 100
-  
-  c(
-    Média = media,
-    Mediana = mediana,
-    Moda = moda,
-    Q1 = quartis[1],
-    Q3 = quartis[3],
-    Variância = variancia,
-    `Desvio Padrão` = desvio,
-    `Coeficiente de Variação (%)` = cv
-  )
-}
-
-# Aplica a função para cada área
-tabela_medidas <- data.frame(
-  `Ciências da Natureza` = medidas(acertos$ACERTOS_CN),
-  `Ciências Humanas` = medidas(acertos$ACERTOS_CH),
-  `Linguagens` = medidas(acertos$ACERTOS_LC),
-  `Matemática` = medidas(acertos$ACERTOS_MT)
-)
-
-# Transforma em tibble para exibir de forma mais organizada
-tabela_medidas <- tibble::rownames_to_column(as.data.frame(tabela_medidas), "Medida")
-
-# Mostra a tabela
-knitr::kable(tabela_medidas, caption = "Medidas descritivas dos acertos do ENEM 2024", digits = 2)
-```
+**Análise de Regressão Linear Simples:** Por fim, o relatório explora modelos preditivos simples para verificar a força da relação entre áreas correlatas, investigando se o desempenho em Ciências da Natureza pode prever a nota de Matemática, e se os acertos em Linguagens têm poder preditivo sobre a nota final da Redação.
 
 ***
 
@@ -252,7 +87,7 @@ names(tabela_escola_porc) <- c("Federal", "Estadual", "Municipal", "Privada")
 
 # 4. Gráfico de Barras (com rótulos corretos)
 barplot(tabela_escola_porc,
-        main="Gráfico 1: Tipo de Escola dos Participantes (GO)",
+        main="Tipo de Escola dos Participantes (GO)",
         ylab="Porcentagem (%)",
         xlab="Tipo de Dependência Administrativa",
         col="darkblue"
@@ -261,7 +96,7 @@ barplot(tabela_escola_porc,
 
 **Interpretação da Análise de Tipo de Escola**
 
-A análise da `TP_DEPENDENCIA_ADM_ESC` (Gráfico 1) mostra o perfil claro dos participantes de escolas de Goiás. A grande maioria, **`r tabela_escola_porc["Estadual"]`%**, provém de escolas **Estaduais**.
+A análise da `TP_DEPENDENCIA_ADM_ESC` mostra o perfil claro dos participantes de escolas de Goiás. A grande maioria, **`r tabela_escola_porc["Estadual"]`%**, provém de escolas **Estaduais**.
 
 Em segundo lugar, com **`r tabela_escola_porc["Privada"]`%**, estão os alunos de escolas **Privadas**, seguidos por **`r tabela_escola_porc["Federal"]`%** de escolas **Federais**.
 
@@ -269,7 +104,7 @@ Como esperado para participantes do Ensino Médio, a participação de escolas *
 
 ***
 
-## Análise: Tipo da Língua Estrangeira (`TP_LINGUA`)
+### Análise: Tipo da Língua Estrangeira (`TP_LINGUA`)
 
 ```{r analise-lingua, echo=FALSE, message=FALSE, warning=FALSE}
 library(dplyr)
@@ -340,7 +175,157 @@ Este dado é particularmente interessante quando cruzado com a análise anterior
 
 ## Análise das Variáveis Quantitativas Discretas EM CONJUNTO
 
-###Histogramas
+### Estatísticas descritivas dos acertos ENEM
+```{r medidas-descritivas-acertos, echo=FALSE}
+# Pacotes úteis
+library(dplyr)
+library(tibble)
+
+# Seleciona apenas as colunas de interesse
+acertos <- dados_enem %>%
+  select(ACERTOS_CN, ACERTOS_CH, ACERTOS_LC, ACERTOS_MT)
+
+# Função para calcular as medidas descritivas de uma variável numérica
+medidas <- function(x) {
+  moda <- as.numeric(names(sort(table(x), decreasing = TRUE))[1])  # Moda simples
+  media <- mean(x, na.rm = TRUE)
+  mediana <- median(x, na.rm = TRUE)
+  quartis <- quantile(x, probs = c(0.25, 0.5, 0.75), na.rm = TRUE)
+  variancia <- var(x, na.rm = TRUE)
+  desvio <- sd(x, na.rm = TRUE)
+  cv <- (desvio / media) * 100
+  
+  c(
+    Média = media,
+    Mediana = mediana,
+    Moda = moda,
+    Q1 = quartis[1],
+    Q3 = quartis[3],
+    Variância = variancia,
+    `Desvio Padrão` = desvio,
+    `Coeficiente de Variação (%)` = cv
+  )
+}
+
+# Aplica a função para cada área
+tabela_medidas <- data.frame(
+  `Ciências da Natureza` = medidas(acertos$ACERTOS_CN),
+  `Ciências Humanas` = medidas(acertos$ACERTOS_CH),
+  `Linguagens` = medidas(acertos$ACERTOS_LC),
+  `Matemática` = medidas(acertos$ACERTOS_MT)
+)
+
+# Transforma em tibble para exibir de forma mais organizada
+tabela_medidas <- tibble::rownames_to_column(as.data.frame(tabela_medidas), "Medida")
+
+# Mostra a tabela
+knitr::kable(tabela_medidas, caption = "Medidas descritivas dos acertos do ENEM 2024", digits = 2)
+```
+
+
+### Tabelas de Frequências dos Acertos
+
+
+#### Acertos Ciências da Natureza
+```{r tabela-frequencias-1, echo=FALSE}
+acertos_cn <- na.omit(dados_enem$ACERTOS_CN)
+intervalos_cn <- cut(
+  acertos_cn,
+  breaks = seq(0, max(acertos_cn) + 4.999, by = 5), 
+  right = FALSE, include.lowest = TRUE
+)
+freq_abs_cn <- table(intervalos_cn)
+freq_rel_cn <- round(prop.table(freq_abs_cn) * 100, 2)
+freq_acum_cn <- cumsum(freq_rel_cn)
+tabela_freq_cn <- data.frame(
+  "Intervalo de Acertos" = names(freq_abs_cn),
+  "Frequência Absoluta" = as.vector(freq_abs_cn),
+  "Frequência Relativa (%)" = as.vector(freq_rel_cn),
+  "Frequência Acumulada (%)" = as.vector(freq_acum_cn)
+)
+knitr::kable(
+  tabela_freq_cn,
+  caption = "Tabela 1.1: Distribuição de Frequência - Acertos em Ciências da Natureza (GO)",
+  align = "c"
+)
+```
+
+
+#### Acertos Ciências Humanas
+```{r tabela-frequencias-2, echo=FALSE}
+acertos_ch <- na.omit(dados_enem$ACERTOS_CH)
+intervalos_ch <- cut(
+  acertos_ch,
+  breaks = seq(0, max(acertos_ch) + 4.999, by = 5), # CORRIGIDO
+  right = FALSE, include.lowest = TRUE
+)
+freq_abs_ch <- table(intervalos_ch)
+freq_rel_ch <- round(prop.table(freq_abs_ch) * 100, 2)
+freq_acum_ch <- cumsum(freq_rel_ch)
+tabela_freq_ch <- data.frame(
+  "Intervalo de Acertos" = names(freq_abs_ch),
+  "Frequência Absoluta" = as.vector(freq_abs_ch),
+  "Frequência Relativa (%)" = as.vector(freq_rel_ch),
+  "Frequência Acumulada (%)" = as.vector(freq_acum_ch)
+)
+knitr::kable(
+  tabela_freq_ch,
+  caption = "Tabela 1.2: Distribuição de Frequência - Acertos em Ciências Humanas (GO)",
+  align = "c"
+)
+```
+
+
+#### Acertos Matemática
+```{r tabela-frequencias-3, echo=FALSE}
+acertos_mt <- na.omit(dados_enem$ACERTOS_MT)
+intervalos_mt <- cut(
+  acertos_mt,
+  breaks = seq(0, max(acertos_mt) + 4.999, by = 5), # CORRIGIDO
+  right = FALSE, include.lowest = TRUE
+)
+freq_abs_mt <- table(intervalos_mt)
+freq_rel_mt <- round(prop.table(freq_abs_mt) * 100, 2)
+freq_acum_mt <- cumsum(freq_rel_mt)
+tabela_freq_mt <- data.frame(
+  "Intervalo de Acertos" = names(freq_abs_mt),
+  "Frequência Absoluta" = as.vector(freq_abs_mt),
+  "Frequência Relativa (%)" = as.vector(freq_rel_mt),
+  "Frequência Acumulada (%)" = as.vector(freq_acum_mt)
+)
+knitr::kable(
+  tabela_freq_mt,
+  caption = "Tabela 1.3: Distribuição de Frequência - Acertos em Matemática (GO)",
+  align = "c"
+)
+```
+
+
+#### Acertos Linguagens
+```{r tabela-frequencias-4, echo=FALSE}
+acertos_lc <- na.omit(dados_enem$ACERTOS_LC)
+intervalos_lc <- cut(
+  acertos_lc,
+  breaks = seq(0, max(acertos_lc) + 4.999, by = 5), # CORRIGIDO
+  right = FALSE, include.lowest = TRUE
+)
+freq_abs_lc <- table(intervalos_lc)
+freq_rel_lc <- round(prop.table(freq_abs_lc) * 100, 2)
+freq_acum_lc <- cumsum(freq_rel_lc)
+tabela_freq_lc <- data.frame(
+  "Intervalo de Acertos" = names(freq_abs_lc),
+  "Frequência Absoluta" = as.vector(freq_abs_lc),
+  "Frequência Relativa (%)" = as.vector(freq_rel_lc),
+  "Frequência Acumulada (%)" = as.vector(freq_acum_lc)
+)
+knitr::kable(
+  tabela_freq_lc,
+  caption = "Tabela 1.4: Distribuição de Frequência - Acertos em Linguagens (GO)",
+  align = "c"
+)
+```
+
+### Histogramas
 ```{r analise-discreta-acertos-conjunto, echo=FALSE}
 # 1. Definir as colunas que vamos analisar
 cols_discretas <- c("ACERTOS_CN", "ACERTOS_CH", "ACERTOS_LC", "ACERTOS_MT")
@@ -365,27 +350,7 @@ hist(presentes_dia1$ACERTOS_LC, main="Acertos em LC (Presentes)", xlab="Acertos"
 hist(presentes_dia2$ACERTOS_MT, main="Acertos em MT (Presentes)", xlab="Acertos", ylab="Freq.", col="purple", breaks = seq(0, 45, by = 5), right = FALSE)
 ```
 
-**Interpretação da Análise de Acertos de Todas as Áreas**
-
-Os Histogramas ilustram visualmente a distribuição do número de acertos (dos alunos presentes) nas quatro áreas de prova. É possível observar um padrão consistente em todas elas: uma clara **assimetria à direita** (ou assimetria positiva), o que significa que a maioria dos alunos se concentra nas faixas de acertos mais baixas.
-
-Comparativamente, as provas de Linguagens (LC) e Humanas (CH) apresentam medianas de acertos mais altas do que Ciências da Natureza (CN) e Matemática (MT), indicando um desempenho geral superior nas provas do primeiro dia.
-
-Os summaries estatísticos confirmam essa tendência:
-
-Ciências da Natureza (CN): A média de acertos foi de **`r medias_acertos["ACERTOS_CN"]`**, enquanto a mediana (o valor central, 50%) foi de **`r medianas_acertos["ACERTOS_CN"]`**. 
-50% dos alunos (o intervalo interquartil) acertaram entre **`r q1_acertos["ACERTOS_CN"]`** (1º Quartil) e **`r q3_acertos["ACERTOS_CN"]`** (3º Quartil) questões.
-
-Ciências Humanas (CH): A média de acertos foi de **`r medias_acertos["ACERTOS_CH"]`**, enquanto a mediana foi de **`r medianas_acertos["ACERTOS_CH"]`**. 
-50% dos alunos acertaram entre **`r q1_acertos["ACERTOS_CH"]`** (1º Quartil) e **`r q3_acertos["ACERTOS_CH"]`** (3º Quartil) questões.
-
-Linguagens e Códigos (LC): A média de acertos foi de **`r medias_acertos["ACERTOS_LC"]`**, enquanto a mediana foi de **`r medianas_acertos["ACERTOS_LC"]`**. 
-50% dos alunos acertaram entre **`r q1_acertos["ACERTOS_LC"]`** (1º Quartil) e **`r q3_acertos["ACERTOS_LC"]`** (3º Quartil) questões.
-
-Matemática (MT): A média de acertos foi de **`r medias_acertos["ACERTOS_MT"]`**, enquanto a mediana foi de **`r medianas_acertos["ACERTOS_MT"]`**. 
-50% dos alunos acertaram entre **`r q1_acertos["ACERTOS_MT"]`** (1º Quartil) e **`r q3_acertos["ACERTOS_MT"]`** (3º Quartil) questões.
-
-###Boxplots
+### Boxplots
 ```{r analise-discretas-acertos-boxplot, echo=FALSE}
 # 1. Criamos os vetores de nomes e cores
 
@@ -404,7 +369,7 @@ Matematica = dados_enem$ACERTOS_MT
 # 3. Geramos o boxplot comparativo
 
 boxplot(acertos_enem,
-main = "Gráfico X: Acertos por Área do ENEM (GO)",
+main = "Acertos por Área do ENEM (GO)",
 ylab = "Acertos",
 xlab = "Área de Conhecimento",
 names = rotulos_areas,
@@ -425,9 +390,97 @@ med_matematica <- round(medianas_por_area["Matematica"], 2)
 
 ```
 
+**Interpretação da Análise de Acertos de Todas as Áreas**
+
+Os Histogramas ilustram visualmente a distribuição do número de acertos (dos alunos presentes) nas quatro áreas de prova. É possível observar um padrão consistente em todas elas: uma clara **assimetria à direita** (ou assimetria positiva), o que significa que a maioria dos alunos se concentra nas faixas de acertos mais baixas.
+
+Comparativamente, as provas de Linguagens (LC) e Humanas (CH) apresentam medianas de acertos mais altas do que Ciências da Natureza (CN) e Matemática (MT), indicando um desempenho geral superior nas provas do primeiro dia.
+
+Os summaries estatísticos confirmam essa tendência:
+
+Ciências da Natureza (CN): A média de acertos foi de **`r medias_acertos["ACERTOS_CN"]`**, enquanto a mediana (o valor central, 50%) foi de **`r medianas_acertos["ACERTOS_CN"]`**. 
+50% dos alunos (o intervalo interquartil) acertaram entre **`r q1_acertos["ACERTOS_CN"]`** (1º Quartil) e **`r q3_acertos["ACERTOS_CN"]`** (3º Quartil) questões.
+
+Ciências Humanas (CH): A média de acertos foi de **`r medias_acertos["ACERTOS_CH"]`**, enquanto a mediana foi de **`r medianas_acertos["ACERTOS_CH"]`**. 
+50% dos alunos acertaram entre **`r q1_acertos["ACERTOS_CH"]`** (1º Quartil) e **`r q3_acertos["ACERTOS_CH"]`** (3º Quartil) questões.
+
+Linguagens e Códigos (LC): A média de acertos foi de **`r medias_acertos["ACERTOS_LC"]`**, enquanto a mediana foi de **`r medianas_acertos["ACERTOS_LC"]`**. 
+50% dos alunos acertaram entre **`r q1_acertos["ACERTOS_LC"]`** (1º Quartil) e **`r q3_acertos["ACERTOS_LC"]`** (3º Quartil) questões.
+
+Matemática (MT): A média de acertos foi de **`r medias_acertos["ACERTOS_MT"]`**, enquanto a mediana foi de **`r medianas_acertos["ACERTOS_MT"]`**. 
+50% dos alunos acertaram entre **`r q1_acertos["ACERTOS_MT"]`** (1º Quartil) e **`r q3_acertos["ACERTOS_MT"]`** (3º Quartil) questões.
+
+No boxplot comparativo, a diferença entre as áreas (em número de acertos) se torna mais evidente.
+
+**Ciências Humanas** se destaca com a **maior mediana** (a linha central, em r med_humanas acertos), indicando o **melhor desempenho geral**. Esta área também apresenta a **maior variabilidade no intervalo interquartil** (a "caixa" é a mais alta), mostrando **maior dispersão** no desempenho dos 50% centrais dos alunos.
+
+**Linguagens** apresenta um **desempenho intermediário**, com a **segunda maior mediana** (**`r med_linguagens`** acertos). Notavelmente, possui a "caixa" mais "curta", indicando que a maioria dos alunos teve um número de acertos muito próximo da mediana.
+
+**Ciências da Natureza e Matemática** concentram as **menores medianas** (**`r med_natureza`** e **`r med_matematica`** acertos, respectivamente), com valores muito próximos entre si. Ambas as áreas, juntamente com Humanas, também apresentam uma **quantidade significativa de valores atípicos** (outliers) superiores, mostrando que, embora o desempenho mediano seja baixo, um grupo de alunos conseguiu um número de acertos muito acima da média.
+
+Em termos quantitativos, as **medianas** (em número de acertos) calculadas foram aproximadamente:
+
+**Natureza: `r med_natureza`** acertos
+
+**Humanas: `r med_humanas`** acertos
+
+**Linguagens: `r med_linguagens`** acertos
+
+**Matemática: `r med_matematica`** acertos
+
+De modo geral, a análise do número de acertos confirma que os participantes de Goiás tendem a ter um desempenho mediano melhor na prova de Ciências Humanas, seguido por Linguagens, e um desempenho mais baixo em Matemática e Ciências da Natureza.
+
 ***
 
 ## Análise das Variáveis Quantitativas Contínuas EM CONJUNTO
+
+### Estatísticas descritivas das notas ENEM
+```{r medidas-descritivas-notas, echo=FALSE}
+# Pacotes úteis
+library(dplyr)
+library(tibble)
+
+# Seleciona apenas as colunas de interesse
+notas <- dados_enem %>%
+  select(NU_NOTA_CN, NU_NOTA_CH, NU_NOTA_LC, NU_NOTA_MT, NU_NOTA_REDACAO)
+
+# Função para calcular as medidas descritivas de uma variável numérica
+medidas <- function(x) {
+  moda <- as.numeric(names(sort(table(x), decreasing = TRUE))[1])  # Moda simples
+  media <- mean(x, na.rm = TRUE)
+  mediana <- median(x, na.rm = TRUE)
+  quartis <- quantile(x, probs = c(0.25, 0.5, 0.75), na.rm = TRUE)
+  variancia <- var(x, na.rm = TRUE)
+  desvio <- sd(x, na.rm = TRUE)
+  cv <- (desvio / media) * 100
+  
+  c(
+    Média = media,
+    Mediana = mediana,
+    Moda = moda,
+    Q1 = quartis[1],
+    Q3 = quartis[3],
+    Variância = variancia,
+    `Desvio Padrão` = desvio,
+    `Coeficiente de Variação (%)` = cv
+  )
+}
+
+# Aplica a função para cada área
+tabela_medidas <- data.frame(
+  `Ciências da Natureza` = medidas(notas$NU_NOTA_CN),
+  `Ciências Humanas` = medidas(notas$NU_NOTA_CH),
+  `Linguagens` = medidas(notas$NU_NOTA_LC),
+  `Matemática` = medidas(notas$NU_NOTA_MT),
+  `Redação` = medidas(notas$NU_NOTA_REDACAO)
+)
+
+# Transforma em tibble para exibir de forma mais organizada
+tabela_medidas <- tibble::rownames_to_column(as.data.frame(tabela_medidas), "Medida")
+
+# Mostra a tabela
+knitr::kable(tabela_medidas, caption = "Medidas descritivas das notas do ENEM 2024", digits = 2)
+```
 
 ### Histogramas
 ```{r analise-continua-notas-histograma, echo=FALSE}
@@ -500,7 +553,7 @@ Matematica = dados_enem$NU_NOTA_MT
 # 3. Geramos o boxplot comparativo
 
 boxplot(notas_enem,
-main = "Gráfico X: Notas por Área do ENEM (GO)",
+main = "Notas por Área do ENEM (GO)",
 ylab = "Nota",
 xlab = "Área de Conhecimento",
 names = rotulos_areas,
@@ -566,7 +619,7 @@ cores_escola <- c("blue", "green", "orange", "red")
 
 # 2. Geramos o Boxplot
 boxplot(dados_enem$NU_NOTA_MT ~ dados_enem$TP_DEPENDENCIA_ADM_ESC,
-        main="Gráfico 5: Notas de Mat. por Tipo de Escola",
+        main="Notas de Mat. por Tipo de Escola",
         ylab="Nota de Matemática",
         xlab="Tipo de Escola",
         names = rotulos_escola,  
@@ -589,7 +642,7 @@ med_privada <- round(medianas_por_grupo["4"], 2)
 
 **Interpretação da Análise Comparativa**
 
-O Gráfico 5 é uma das análises mais reveladoras deste trabalho, pois compara o desempenho em Matemática (`NU_NOTA_MT`) entre os diferentes tipos de administração escolar (`TP_DEPENDENCIA_ADM_ESC`).
+Esse gráfico bloxpot é uma das análises mais reveladoras deste trabalho, pois compara o desempenho em Matemática (`NU_NOTA_MT`) entre os diferentes tipos de administração escolar (`TP_DEPENDENCIA_ADM_ESC`).
 
 A diferença de desempenho é nítida:
 
@@ -610,7 +663,7 @@ cores_escola <- c("blue", "green", "orange", "red")
 
 # 2. Geramos o Boxplot
 boxplot(dados_enem$NU_NOTA_RED ~ dados_enem$TP_DEPENDENCIA_ADM_ESC,
-        main="Gráfico 6: Nota de Redação por Tipo de Escola",
+        main="Nota de Redação por Tipo de Escola",
         ylab="Nota de Redação",
         xlab="Tipo de Escola",
         names = rotulos_escola,
@@ -629,32 +682,36 @@ med_estadual <- round(medianas_por_grupo["2"], 2)
 med_municipal <- round(medianas_por_grupo["3"], 2)
 med_privada <- round(medianas_por_grupo["4"], 2)
 ```
+
 **Interpretação da Análise Comparativa**
+
 O gráfico que compara o desempenho em Redação (NU_NOTA_RED) entre os diferentes tipos de administração escolar (TP_DEPENDENCIA_ADM_ESC) também revela diferenças importantes entre os grupos analisados.
 
 Os resultados seguem uma tendência clara:
 
-1.  **Escolas Federais:** Ficam em segundo lugar, com mediana de r med_federal pontos.
+1.  **Escolas Federais:** Ficam em segundo lugar, com mediana de **`r med_federal`** pontos.
 Embora apresentem excelentes resultados, ainda ficam ligeiramente abaixo das escolas privadas no desempenho mediano.
 
 2.  **Escolas Privadas:** Apresentam o melhor desempenho em Redação.
-A mediana deste grupo é de r med_privada pontos, a maior entre todas as categorias, indicando um desempenho consistentemente superior.
+A mediana deste grupo é de **`r med_privada` pontos, a maior entre todas as categorias, indicando um desempenho consistentemente superior.
 
-3.  **Escolas Municipais:** Este grupo, que possui participação reduzida (r tabela_escola_porc["Municipal"]%), apresenta a menor mediana entre os tipos de escola, com r med_municipal pontos.
+3.  **Escolas Municipais:** Este grupo, que possui participação reduzida (**`r tabela_escola_porc["Municipal"]`%**), apresenta a menor mediana entre os tipos de escola, com r med_municipal pontos.
 O resultado reflete desafios estruturais mais evidentes nessa rede.
 
-4.  **Escolas Estaduais:** Representando a maior parcela dos participantes (r tabela_escola_porc["Estadual"]%), apresentam uma mediana de r med_estadual pontos — inferior às redes Federal e Privada, mas superior às Municipais.
+4.  **Escolas Estaduais:** Representando a maior parcela dos participantes (**`r tabela_escola_porc["Estadual"]`%**), apresentam uma mediana de **`r med_estadual`** pontos — inferior às redes Federal e Privada, mas superior às Municipais.
+
+***
 
 ## Análise de Regressão Linear Simples
 
 O foco da análise de regressão linear simples serve para verificar se uma variável quantitativa pode prever o comportamento de outra.
 
+### Análise: `NU_NOTA_MT` vs. `NU_NOTA_CN`
+
 Para esta análise, vamos investigar se a nota em **Ciências da Natureza (`NU_NOTA_CN`)** pode ser usada para prever a nota em **Matemática (`NU_NOTA_MT`)**.
 
 * Variável Dependente (Y): `NU_NOTA_MT`
 * Variável Independente (X): `NU_NOTA_CN`
-
-### Análise: `NU_NOTA_MT` vs. `NU_NOTA_CN`
 
 ```{r analise-regressao, echo=FALSE}
 # 1. Ajustar o modelo de regressão linear
@@ -676,7 +733,7 @@ r_quadrado <- round(summary_modelo$r.squared, 4)
 
 # 4. Gerar o Gráfico de Dispersão
 plot(dados_enem$NU_NOTA_CN, dados_enem$NU_NOTA_MT,
-     main="Gráfico 7: Regressão Linear - Nota Mat. vs. Nota CN",
+     main="Regressão Linear - Nota Mat. vs. Nota CN",
      xlab="Nota Ciências da Natureza (X)",
      ylab="Nota Matemática (Y)",
      pch = 19, # Tipo de ponto (círculo pequeno)
@@ -690,7 +747,7 @@ abline(modelo_regressao, col = "red", lwd = 3) # lwd = espessura da linha
 
 **Interpretação da Análise de Regressão**
 
-O Gráfico 6 mostra o diagrama de dispersão entre as notas de Ciências da Natureza (eixo X) e Matemática (eixo Y). A linha vermelha representa o modelo de regressão linear simples.
+Esse gráfico mostra o diagrama de dispersão entre as notas de Ciências da Natureza (eixo X) e Matemática (eixo Y). A linha vermelha representa o modelo de regressão linear simples.
 
 Visualmente, os pontos formam uma nuvem que sobe da esquerda para a direita, indicando uma **correlação linear positiva** entre as duas variáveis: quanto maior a nota em CN, maior tende a ser a nota em MT.
 
@@ -708,14 +765,14 @@ O resumo do modelo estatístico nos fornece os seguintes indicadores-chave:
 3.  **Significância (P-Valor):**
     * O P-valor para o coeficiente B1 foi de **`r p_valor`** (ou um valor muito próximo de zero). Como este valor é muito menor que 0.05, confirmamos que a relação entre as duas notas é **estatisticamente significante**.
 
-## Análise de Regressão Linear Simples
+***
 
-O objetivo desta análise é verificar se o desempenho do participante em **Linguagens e Códigos (ACERTOS_LC)** pode ser usado para prever sua **nota de Redação (NU_NOTA_REDACAO)**.
+### Análise: `NU_NOTA_REDACAO` vs. `ACERTOS_LC`
+
+O objetivo desta próxima análise é verificar se o desempenho do participante em **Linguagens e Códigos (ACERTOS_LC)** pode ser usado para prever sua **nota de Redação (NU_NOTA_REDACAO)**.
 
 * Variável Dependente (Y): `NU_NOTA_REDACAO`
 * Variável Independente (X): `ACERTOS_LC`
-
-### Análise: `NU_NOTA_REDACAO` vs. `ACERTOS_LC`
 
 ```{r regressao-red-lc, echo=FALSE}
 # 1. Ajustar o modelo de regressão linear
@@ -745,7 +802,7 @@ plot(dados_enem$ACERTOS_LC, dados_enem$NU_NOTA_REDACAO,
 abline(modelo_red_lc, col = "red", lwd = 3)
 ```
 
-## Interpretação da Análise de Regressão
+**Interpretação da Análise de Regressão**
 
 O gráfico acima mostra o diagrama de dispersão entre o número de acertos em Linguagens (eixo X) e a nota de Redação (eixo Y). A linha vermelha representa o modelo de regressão linear simples.
 
