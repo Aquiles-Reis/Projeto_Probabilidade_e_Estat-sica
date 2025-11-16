@@ -29,7 +29,8 @@ dados_enem <- fread(caminho_dados_finais)
 #head(dados_enem)
 #summary(dados_enem)
 ```
----
+
+***
 
 ## Tabelas de Frequências dos Acertos
 
@@ -133,7 +134,7 @@ knitr::kable(
 )
 ```
 
----
+***
 
 ## Estatísticas descritivas das notas ENEM
 ```{r medidas-descritivas-notas, echo=FALSE}
@@ -183,7 +184,7 @@ tabela_medidas <- tibble::rownames_to_column(as.data.frame(tabela_medidas), "Med
 knitr::kable(tabela_medidas, caption = "Medidas descritivas das notas do ENEM 2024", digits = 2)
 ```
 
----
+***
 
 ## Estatísticas descritivas dos acertos ENEM
 ```{r medidas-descritivas-acertos, echo=FALSE}
@@ -232,7 +233,7 @@ tabela_medidas <- tibble::rownames_to_column(as.data.frame(tabela_medidas), "Med
 knitr::kable(tabela_medidas, caption = "Medidas descritivas dos acertos do ENEM 2024", digits = 2)
 ```
 
----
+***
 
 ## Análise das Variáveis Qualitativas
 
@@ -266,7 +267,7 @@ Em segundo lugar, com **`r tabela_escola_porc["Privada"]`%**, estão os alunos d
 
 Como esperado para participantes do Ensino Médio, a participação de escolas **Municipais** é estatisticamente nula, com apenas **`r tabela_escola_porc["Municipal"]`%**.
 
----
+***
 
 ## Análise: Tipo da Língua Estrangeira (`TP_LINGUA`)
 
@@ -335,10 +336,11 @@ Observa-se que a maioria dos estudantes (**`r perc_maioria`%**, ou **`r qtd_maio
 
 Este dado é particularmente interessante quando cruzado com a análise anterior: mesmo com a grande predominância de alunos da rede estadual pública, a preferência pelo **`r nome_maioria`** se mostra superior neste grupo de concluintes.
 
----
+***
 
 ## Análise das Variáveis Quantitativas Discretas EM CONJUNTO
 
+###Histogramas
 ```{r analise-discreta-acertos-conjunto, echo=FALSE}
 # 1. Definir as colunas que vamos analisar
 cols_discretas <- c("ACERTOS_CN", "ACERTOS_CH", "ACERTOS_LC", "ACERTOS_MT")
@@ -383,9 +385,7 @@ Linguagens e Códigos (LC): A média de acertos foi de **`r medias_acertos["ACER
 Matemática (MT): A média de acertos foi de **`r medias_acertos["ACERTOS_MT"]`**, enquanto a mediana foi de **`r medianas_acertos["ACERTOS_MT"]`**. 
 50% dos alunos acertaram entre **`r q1_acertos["ACERTOS_MT"]`** (1º Quartil) e **`r q3_acertos["ACERTOS_MT"]`** (3º Quartil) questões.
 
----
 ###Boxplots
-
 ```{r analise-discretas-acertos-boxplot, echo=FALSE}
 # 1. Criamos os vetores de nomes e cores
 
@@ -424,6 +424,8 @@ med_linguagens <- round(medianas_por_area["Linguagens"], 2)
 med_matematica <- round(medianas_por_area["Matematica"], 2)
 
 ```
+
+***
 
 ## Análise das Variáveis Quantitativas Contínuas EM CONJUNTO
 
@@ -549,7 +551,7 @@ Em termos quantitativos, as medianas calculadas foram aproximadamente:
 
 De modo geral, as análises confirmam que os participantes de Goiás tendem a ter desempenho melhor nas áreas de Linguagens e Redação, e mais baixo em Matemática e Ciências da Natureza, padrão compatível com o observado em outras edições do ENEM.
 
----
+***
 
 ## Análise Comparativa (Cruzamento de Variáveis)
 
@@ -598,7 +600,7 @@ A diferença de desempenho é nítida:
 
 Em suma, o gráfico demonstra uma forte correlação entre a dependência administrativa da escola e o desempenho dos alunos na prova de matemática em Goiás.
 
----
+***
 
 ## Análise de Regressão Linear Simples
 
@@ -661,5 +663,4 @@ O resumo do modelo estatístico nos fornece os seguintes indicadores-chave:
     * O R-quadrado do modelo foi de **`r r_quadrado`**. Isso significa que **`r r_quadrado * 100`%** da variação nas notas de Matemática podem ser estatisticamente explicadas pela variação nas notas de Ciências da Natureza.
 
 3.  **Significância (P-Valor):**
-
     * O P-valor para o coeficiente B1 foi de **`r p_valor`** (ou um valor muito próximo de zero). Como este valor é muito menor que 0.05, confirmamos que a relação entre as duas notas é **estatisticamente significante**.
