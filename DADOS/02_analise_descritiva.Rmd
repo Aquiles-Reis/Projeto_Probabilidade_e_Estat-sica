@@ -602,6 +602,49 @@ Em suma, o gráfico demonstra uma forte correlação entre a dependência admini
 
 ***
 
+### Análise: Nota da Redação vs. Tipo de Escola
+```{r analise-comparativa-boxplot-redacao, echo=FALSE}
+# 1. Criamos os vetores de nomes e cores
+rotulos_escola <- c("Federal", "Estadual", "Municipal", "Privada")
+cores_escola <- c("blue", "green", "orange", "red")
+
+# 2. Geramos o Boxplot
+boxplot(dados_enem$NU_NOTA_RED ~ dados_enem$TP_DEPENDENCIA_ADM_ESC,
+        main="Gráfico 6: Nota de Redação por Tipo de Escola",
+        ylab="Nota de Redação",
+        xlab="Tipo de Escola",
+        names = rotulos_escola,
+        col = cores_escola
+)
+
+# 3. CALCULAMOS AS ESTATÍSTICAS PARA O TEXTO
+medianas_por_grupo <- tapply(dados_enem$NU_NOTA_RED,
+                             dados_enem$TP_DEPENDENCIA_ADM_ESC,
+                             median,
+                             na.rm = TRUE)
+
+# 4. Salvar em variáveis fáceis de usar no texto
+med_federal <- round(medianas_por_grupo["1"], 2)
+med_estadual <- round(medianas_por_grupo["2"], 2)
+med_municipal <- round(medianas_por_grupo["3"], 2)
+med_privada <- round(medianas_por_grupo["4"], 2)
+```
+**Interpretação da Análise Comparativa**
+O gráfico que compara o desempenho em Redação (NU_NOTA_RED) entre os diferentes tipos de administração escolar (TP_DEPENDENCIA_ADM_ESC) também revela diferenças importantes entre os grupos analisados.
+
+Os resultados seguem uma tendência clara:
+
+1.  **Escolas Federais:** Ficam em segundo lugar, com mediana de r med_federal pontos.
+Embora apresentem excelentes resultados, ainda ficam ligeiramente abaixo das escolas privadas no desempenho mediano.
+
+2.  **Escolas Privadas:** Apresentam o melhor desempenho em Redação.
+A mediana deste grupo é de r med_privada pontos, a maior entre todas as categorias, indicando um desempenho consistentemente superior.
+
+3.  **Escolas Municipais:** Este grupo, que possui participação reduzida (r tabela_escola_porc["Municipal"]%), apresenta a menor mediana entre os tipos de escola, com r med_municipal pontos.
+O resultado reflete desafios estruturais mais evidentes nessa rede.
+
+4.  **Escolas Estaduais:** Representando a maior parcela dos participantes (r tabela_escola_porc["Estadual"]%), apresentam uma mediana de r med_estadual pontos — inferior às redes Federal e Privada, mas superior às Municipais.
+
 ## Análise de Regressão Linear Simples
 
 O foco da análise de regressão linear simples serve para verificar se uma variável quantitativa pode prever o comportamento de outra.
@@ -633,7 +676,7 @@ r_quadrado <- round(summary_modelo$r.squared, 4)
 
 # 4. Gerar o Gráfico de Dispersão
 plot(dados_enem$NU_NOTA_CN, dados_enem$NU_NOTA_MT,
-     main="Gráfico 6: Regressão Linear - Nota Mat. vs. Nota CN",
+     main="Gráfico 7: Regressão Linear - Nota Mat. vs. Nota CN",
      xlab="Nota Ciências da Natureza (X)",
      ylab="Nota Matemática (Y)",
      pch = 19, # Tipo de ponto (círculo pequeno)
