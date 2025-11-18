@@ -50,8 +50,6 @@ if (inherits(dados_enem, "try-error")) {
 
 ## Contexto e Objetivo
 
-O Exame Nacional do Ensino Médio (ENEM) é, atualmente, o principal instrumento de avaliação da educação básica brasileira e a porta de entrada para a vasta maioria das instituições de ensino superior públicas e privadas do país. Compreender os resultados do exame não é apenas uma forma de medir o desempenho acadêmico individual, mas também uma ferramenta poderosa para o diagnóstico de políticas públicas educacionais, identificação de disparidades e compreensão dos desafios enfrentados por diferentes grupos de estudantes.
-
 O objetivo central deste relatório é realizar uma análise descritiva, comparativa e preditiva detalhada dos resultados do ENEM 2024, focando especificamente no desempenho dos estudantes do estado de Goiás.
 
 ## Escopo da Análise e Metodologia
@@ -84,12 +82,9 @@ Em ambas as subseções, são utilizadas medidas de tendência central e dispers
 
 **Análise de Regressão Linear Simples:** Por fim, o relatório explora modelos preditivos simples para verificar a força da relação entre áreas correlatas, investigando se o desempenho em Ciências da Natureza pode prever a nota de Matemática, e se os acertos em Linguagens têm poder preditivo sobre a nota final da Redação.
 
-***
-
-## Análise das Variáveis Qualitativas
+# Análise das Variáveis Qualitativas
 
 ### Análise: Tipo de Escola (`TP_DEPENDENCIA_ADM_ESC`)
-
 ```{r analise-qualitativa-escola, echo=FALSE}
 tabela_escola <- table(dados_enem$TP_DEPENDENCIA_ADM_ESC)
 
@@ -113,10 +108,7 @@ Em segundo lugar, com **`r tabela_escola_porc["Privada"]`%**, estão os alunos d
 
 Como esperado para participantes do Ensino Médio, a participação de escolas **Municipais** é estatisticamente nula, com apenas **`r tabela_escola_porc["Municipal"]`%**.
 
-***
-
 ### Análise: Tipo da Língua Estrangeira (`TP_LINGUA`)
-
 ```{r analise-lingua, echo=FALSE, message=FALSE, warning=FALSE}
 library(dplyr)
 library(ggplot2)
@@ -173,9 +165,7 @@ Observa-se que a maioria dos estudantes (**`r perc_maioria`%**, ou **`r qtd_maio
 
 Este dado é particularmente interessante quando cruzado com a análise anterior: mesmo com a grande predominância de alunos da rede estadual pública, a preferência pelo **`r nome_maioria`** se mostra superior neste grupo de concluintes.
 
-***
-
-## Análise das Variáveis Quantitativas Discretas EM CONJUNTO
+# Análise das Variáveis Quantitativas Discretas EM CONJUNTO
 
 ### Estatísticas descritivas dos acertos ENEM
 ```{r medidas-descritivas-acertos, echo=FALSE}
@@ -219,7 +209,6 @@ knitr::kable(tabela_medidas, caption = "Medidas descritivas dos acertos do ENEM 
 ```
 
 ### Tabelas de Frequências dos Acertos
-
 ```{r tabela-frequencias-unica, echo=FALSE}
 
 freq_table <- function(vetor) {
@@ -287,29 +276,29 @@ hist(presentes_dia1$ACERTOS_LC, main="Acertos em LC (Presentes)", xlab="Acertos"
 hist(presentes_dia2$ACERTOS_MT, main="Acertos em MT (Presentes)", xlab="Acertos", ylab="Freq.", col="purple", breaks = seq(0, 45, by = 5), right = FALSE)
 ```
 
-**Interpretação da Análise de Acertos de Todas as Áreas**
+**Interpretação Aprofundada dos Acertos**
 
-Os Histogramas ilustram visualmente a distribuição do número de acertos (dos alunos presentes) nas quatro áreas de prova. É possível observar um padrão consistente em todas elas: uma clara **assimetria à direita** (ou assimetria positiva), o que significa que a maioria dos alunos se concentra nas faixas de acertos mais baixas.
+A análise conjunta dos Histogramas e das Tabelas de Frequência e Estatísticas Descritivas revela padrões importantes sobre o desempenho dos candidatos:
 
-Os summaries estatísticos confirmam essa tendência:
+**1. Forma da Distribuição (Histogramas)**
+Observa-se uma **assimetria à direita** (positiva) em todas as áreas. Isso é corroborado pelo fato de a **Moda** (o pico dos gráficos) ser consistentemente menor que a **Mediana** e a **Média**. Isso indica que a prova é "difícil" para a maioria, com uma grande concentração de alunos nas faixas de notas mais baixas e poucos alunos alcançando pontuações altas (acima de 35 acertos).
 
-Ciências da Natureza (CN): A média de acertos foi de **`r medias_acertos["ACERTOS_CN"]`**, enquanto a mediana (o valor central, 50%) foi de **`r medianas_acertos["ACERTOS_CN"]`**. 
-50% dos alunos (o intervalo interquartil) acertaram entre **`r q1_acertos["ACERTOS_CN"]`** (1º Quartil) e **`r q3_acertos["ACERTOS_CN"]`** (3º Quartil) questões.
+**2. Desempenho Comparativo (Média e Mediana)**
+Existe uma clara dicotomia entre as áreas do "Primeiro Dia" (Humanas e Linguagens) e do "Segundo Dia" (Natureza e Matemática):
+* **Linguagens (LC)** e **Humanas (CH)** apresentam os melhores desempenhos, com medianas de **`r medianas_acertos["ACERTOS_LC"]`** e **`r medianas_acertos["ACERTOS_CH"]`** acertos, respectivamente.
+* **Natureza (CN)** e **Matemática (MT)** mostram um desempenho significativamente inferior. Em Matemática, por exemplo, a mediana é de apenas **`r medianas_acertos["ACERTOS_MT"]`** acertos, o que significa que metade dos estudantes acertou menos de 25% da prova.
 
-Ciências Humanas (CH): A média de acertos foi de **`r medias_acertos["ACERTOS_CH"]`**, enquanto a mediana foi de **`r medianas_acertos["ACERTOS_CH"]`**. 
-50% dos alunos acertaram entre **`r q1_acertos["ACERTOS_CH"]`** (1º Quartil) e **`r q3_acertos["ACERTOS_CH"]`** (3º Quartil) questões.
+**3. Análise de Variabilidade (Coeficiente de Variação)**
+A tabela de estatísticas descritivas traz um dado crucial: o **Coeficiente de Variação (CV%)**.
+* **Matemática** possui a maior dispersão relativa (**50.01%**). Isso indica uma heterogeneidade imensa: enquanto uma vasta massa de alunos tem desempenho muito baixo, existe um grupo disperso que consegue notas maiores, esticando a cauda do gráfico.
+* **Linguagens**, por outro lado, é a prova mais homogênea (CV de **35.54%**), sugerindo que o nível de conhecimento dos alunos nesta área é mais uniforme.
 
-Linguagens e Códigos (LC): A média de acertos foi de **`r medias_acertos["ACERTOS_LC"]`**, enquanto a mediana foi de **`r medianas_acertos["ACERTOS_LC"]`**. 
-50% dos alunos acertaram entre **`r q1_acertos["ACERTOS_LC"]`** (1º Quartil) e **`r q3_acertos["ACERTOS_LC"]`** (3º Quartil) questões.
+**4. Análise de Frequências (Intervalos Críticos)**
+A Tabela Consolidada de Frequências detalha onde os alunos "travam":
+* **O "Gargalo" de Matemática:** É alarmante notar que a faixa de **[5, 10)** acertos concentra a maior parte absoluta dos alunos de Matemática (15.084 estudantes). Somando-se os intervalos, a grande maioria dos candidatos não passa de 15 acertos.
+* **O Padrão de Linguagens:** Diferente de MT e CN, o pico de frequência em Linguagens ocorre mais à frente, nos intervalos de **[15, 20)** e **[20, 25)**, reforçando que é uma prova onde o "chute" ou o conhecimento básico garantem uma pontuação mínima maior.
 
-Matemática (MT): A média de acertos foi de **`r medias_acertos["ACERTOS_MT"]`**, enquanto a mediana foi de **`r medianas_acertos["ACERTOS_MT"]`**. 
-50% dos alunos acertaram entre **`r q1_acertos["ACERTOS_MT"]`** (1º Quartil) e **`r q3_acertos["ACERTOS_MT"]`** (3º Quartil) questões.
-
-Comparativamente, as provas de Linguagens (LC) e Humanas (CH) apresentam medianas de acertos mais altas do que Ciências da Natureza (CN) e Matemática (MT), indicando um desempenho geral superior nas provas do primeiro dia.
-
-***
-
-## Análise das Variáveis Quantitativas Contínuas EM CONJUNTO
+# Análise das Variáveis Quantitativas Contínuas EM CONJUNTO
 
 ### Estatísticas descritivas das notas ENEM
 ```{r medidas-descritivas-notas, echo=FALSE}
@@ -405,16 +394,13 @@ Apesar desse padrão comum, algumas diferenças se destacam. A prova de **Lingua
 
 A prova de **Redação**, porém, apresenta um comportamento claramente distinto. Sua média elevada, acima de **640 pontos**, e mediana ainda maior, em torno de **660 pontos**, indicam que grande parte dos estudantes obtém notas altas. No entanto, o desvio-padrão bastante elevado e o maior coeficiente de variação entre todas as áreas mostram que essa prova possui a maior **heterogeneidade** de desempenho. Essa variação é confirmada pelos histogramas, que revelam distribuição mais espalhada, múltiplos picos e presença de notas muito baixas (entre 0 e 200), ao mesmo tempo em que muitos participantes atingem faixas próximas a 800 pontos.
 
-No conjunto, os resultados indicam que os participantes de Goiás tiveram desempenho relativamente melhor nas áreas de **Linguagens** e **Redação**, enquanto **Ciências da Natureza** e **Matemática** continuam apresentando maiores dificuldades, com médias mais baixas e distribuições mais dispersas. Esse padrão reforça tendências já observadas em outras edições do ENEM.
+No conjunto, os resultados indicam que os participantes de Goiás tiveram desempenho relativamente melhor nas áreas de **Linguagens** e **Redação**, enquanto **Ciências da Natureza** e **Matemática** continuam apresentando maiores dificuldades, com médias mais baixas e distribuições mais dispersas.
 
-***
-
-## Análise Comparativa (Cruzamento de Variáveis)
+# Análise Comparativa (Cruzamento de Variáveis)
 
 Esta é a parte mais importante da análise descritiva, onde cruzamos variáveis qualitativas e quantitativas.
 
 ### Análise: Nota de Matemática vs. Tipo de Escola
-
 ```{r analise-comparativa-boxplot, echo=FALSE}
 rotulos_escola <- c("Federal", "Estadual", "Municipal", "Privada")
 cores_escola <- c("blue", "green", "orange", "red")
@@ -440,7 +426,7 @@ med_privada <- round(medianas_por_grupo["4"], 2)
 
 **Interpretação da Análise Comparativa**
 
-Esse gráfico boxplot é uma das análises mais reveladoras deste trabalho, pois compara o desempenho em Matemática (`NU_NOTA_MT`) entre os diferentes tipos de administração escolar (`TP_DEPENDENCIA_ADM_ESC`).
+Esse gráfico boxplot é uma das análises mais reveladoras deste trabalho, pois compara o desempenho em Matemática entre os diferentes tipos de administração escolar.
 
 Ao analisar os dados, observamos a seguinte hierarquia de desempenho:
 
@@ -448,10 +434,6 @@ Ao analisar os dados, observamos a seguinte hierarquia de desempenho:
 2.  **Escolas Federais (2º Lugar):** Ficam na segunda posição, com uma mediana de **`r med_federal`** pontos. Embora mantenham um desempenho alto, neste recorte específico ficaram abaixo da rede privada.
 3.  **Escolas Municipais:** Apresentam um comportamento atípico. Mesmo sendo um grupo estatisticamente muito pequeno (**`r tabela_escola_porc["Municipal"]`%** da amostra), sua mediana foi de **`r med_municipal`** pontos, superando a rede estadual.
 4.  **Escolas Estaduais:** Este grupo, que representa a vasta maioria dos participantes (**`r tabela_escola_porc["Estadual"]`%**), apresenta o menor desempenho comparativo, com uma mediana de **`r med_estadual`** pontos.
-
-Em suma, o gráfico demonstra uma forte correlação entre a dependência administrativa da escola e o desempenho dos alunos na prova de matemática em Goiás.
-
-***
 
 ### Análise: Nota da Redação vs. Tipo de Escola
 ```{r analise-comparativa-boxplot-redacao, echo=FALSE}
@@ -479,7 +461,7 @@ med_privada <- round(medianas_por_grupo["4"], 2)
 
 **Interpretação da Análise Comparativa**
 
-O gráfico que compara o desempenho em Redação (NU_NOTA_RED) entre os diferentes tipos de administração escolar (TP_DEPENDENCIA_ADM_ESC) também revela diferenças importantes entre os grupos analisados.
+O gráfico que compara o desempenho em Redação entre os diferentes tipos de administração escolar também revela diferenças importantes entre os grupos analisados.
 
 Os resultados seguem uma tendência clara:
 
@@ -494,18 +476,13 @@ O resultado reflete desafios estruturais mais evidentes nessa rede.
 
 4.  **Escolas Estaduais:** Representando a maior parcela dos participantes (**`r tabela_escola_porc["Estadual"]`%**), apresentam uma mediana de **`r med_estadual`** pontos — inferior às redes Federal e Privada, mas superior às Municipais.
 
-***
-
-## Análise de Regressão Linear Simples
+# Análise de Regressão Linear Simples
 
 O foco da análise de regressão linear simples serve para verificar se uma variável quantitativa pode prever o comportamento de outra.
 
-### Análise: `NU_NOTA_MT` vs. `NU_NOTA_CN`
+### Análise: `NU_NOTA_MT (Variável Dependente)`   VS   `NU_NOTA_CN (Variável Independente)`
 
 Para esta análise, vamos investigar se a nota em **Ciências da Natureza (`NU_NOTA_CN`)** pode ser usada para prever a nota em **Matemática (`NU_NOTA_MT`)**.
-
-* Variável Dependente (Y): `NU_NOTA_MT`
-* Variável Independente (X): `NU_NOTA_CN`
 
 ```{r analise-regressao, echo=FALSE}
 modelo_regressao <- lm(NU_NOTA_MT ~ NU_NOTA_CN, data = dados_enem)
@@ -551,14 +528,9 @@ O resumo do modelo estatístico nos fornece os seguintes indicadores-chave:
 3.  **Significância (P-Valor):**
     * O P-valor para o coeficiente B1 foi de **`r p_valor`** (ou um valor muito próximo de zero). Como este valor é muito menor que 0.05, confirmamos que a relação entre as duas notas é **estatisticamente significante**.
 
-***
-
-### Análise: `NU_NOTA_REDACAO` vs. `ACERTOS_LC`
+### Análise: `NU_NOTA_REDACAO (Variável Dependente)`   VS   `ACERTOS_LC (Variável Independente)`
 
 O objetivo desta próxima análise é verificar se o desempenho do participante em **Linguagens e Códigos (ACERTOS_LC)** pode ser usado para prever sua **nota de Redação (NU_NOTA_REDACAO)**.
-
-* Variável Dependente (Y): `NU_NOTA_REDACAO`
-* Variável Independente (X): `ACERTOS_LC`
 
 ```{r regressao-red-lc, echo=FALSE}
 modelo_red_lc <- lm(NU_NOTA_REDACAO ~ ACERTOS_LC, data = dados_enem)
